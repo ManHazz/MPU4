@@ -1,0 +1,431 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Touch 'n Go eWallet — Sign in</title>
+    <link
+      href="https://fonts.googleapis.com/css2?family=DM+Sans:ital,opsz,wght@0,9..40,400;0,9..40,500;0,9..40,600;0,9..40,700&display=swap"
+      rel="stylesheet"
+    />
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css"
+    />
+    <link rel="stylesheet" href="mpu4-fake-sim-common.css" />
+    <style>
+      body.site-tng {
+        --btn: #0059b3;
+        background: #f7f8fa;
+      }
+      body.site-tng .top-bar {
+        background: #fff;
+        border-color: #e5e7eb;
+      }
+      body.site-tng .hero h1 {
+        color: #0a0b0d;
+      }
+      body.site-tng .card {
+        border-color: #e5e7eb;
+      }
+      body.site-tng .hub-link {
+        background: #fff;
+      }
+      body.site-tng .seed-meter {
+        font-size: 0.8rem;
+        margin-top: 0.35rem;
+        color: #64748b;
+      }
+      body.site-tng .seed-meter.warn {
+        color: #b45309;
+      }
+      body.site-tng .seed-meter.ok {
+        color: #047857;
+      }
+      body.site-tng .chat-thread {
+        max-height: 220px;
+        overflow-y: auto;
+        border: 1px solid #e5e7eb;
+        border-radius: 0.5rem;
+        padding: 0.65rem;
+        background: #fff;
+        margin-bottom: 0.65rem;
+        font-size: 0.85rem;
+      }
+      body.site-tng .chat-msg {
+        margin-bottom: 0.55rem;
+        padding: 0.45rem 0.55rem;
+        border-radius: 0.45rem;
+      }
+      body.site-tng .chat-msg.them {
+        background: #eff6ff;
+        border: 1px solid #bfdbfe;
+      }
+      body.site-tng .chat-msg.you {
+        background: #f1f5f9;
+        margin-left: 1.5rem;
+        border: 1px solid #e2e8f0;
+      }
+      body.site-tng .chat-meta {
+        font-size: 0.7rem;
+        color: #94a3b8;
+        margin-top: 0.2rem;
+      }
+    </style>
+  </head>
+  <body class="site-tng">
+    <header class="top-bar">
+      <div class="brand">
+        <i class="fas fa-wallet" style="color: #0059b3"></i> Touch 'n Go eWallet
+      </div>
+      <nav class="top-nav">
+        <a href="#">Promotions</a><a href="#">Financial Services</a
+        ><a href="#">TNG RFID</a>
+      </nav>
+      <a class="hub-link" href="mpu4-fake-web.html"
+        ><i class="fas fa-arrow-left"></i> Dashboard</a
+      >
+    </header>
+    <main>
+      <div class="hero">
+        <h1>Claim your government e-Wallet rewards.</h1>
+        <p class="lead">
+          Gated PIN/OTP lab, branching support chat, and the live five-hop
+          redirect chain simulating local eMADANI phishing. (Simulation only.)
+        </p>
+      </div>
+      <div class="content-grid cols-3">
+        <div class="card">
+          <h2>Account verification</h2>
+          <p class="sub">
+            Verify your phone number and 6-digit PIN to process your reward
+            claim securely.
+          </p>
+          <button type="button" class="btn btn-primary" id="verifyAccountBtn">
+            Verify Account
+          </button>
+        </div>
+        <div class="card">
+          <h2>Customer Care</h2>
+          <p class="sub">
+            Get instant help regarding your transactions from our TNG support
+            team.
+          </p>
+          <button type="button" class="btn btn-primary" id="liveChatBtn">
+            Chat with support
+          </button>
+        </div>
+        <div class="card">
+          <h2>Claim rewards</h2>
+          <p class="sub">
+            Check your eligibility and claim exclusive government or promo
+            rewards today.
+          </p>
+          <button type="button" class="btn btn-primary" id="claimGiveawayBtn">
+            Start claim flow
+          </button>
+        </div>
+      </div>
+    </main>
+    <footer class="site-footer">
+      <span
+        >© Touch 'n Go Sdn Bhd (look-alike for training) · Not affiliated —
+        simulation only.</span
+      >
+      <div class="links">
+        <a href="#">Privacy</a><a href="#">Terms</a><a href="#">Help</a>
+      </div>
+    </footer>
+
+    <script src="mpu4-fake-sim-common.js"></script>
+    <script>
+      (function () {
+        // --- ROUTING CHAIN LOGIC ---
+        function showRoutingChainDebrief() {
+          if (location.hash !== "#routing-complete") return;
+
+          var meta = null;
+          try {
+            meta = JSON.parse(
+              sessionStorage.getItem("mpu4RoutingChainMeta") || "null",
+            );
+          } catch (e) {}
+          try {
+            sessionStorage.removeItem("mpu4RoutingChainMeta");
+          } catch (e2) {}
+
+          // Fixed: Replace state to the correct ewallet file so refreshes don't break
+          history.replaceState(null, document.title, "mpu4-fake-ewallet.html");
+
+          var urls =
+            meta && meta.visited
+              ? meta.visited.join(" → ")
+              : "(open History — you should see mpu4-route-chain.html entries)";
+
+          // Delaying the alert slightly ensures Mpu4Sim has fully initialized and the page has visually rendered
+          setTimeout(() => {
+            if (window.Mpu4Sim) {
+              window.Mpu4Sim.logSimEvent(
+                "You completed a real redirect chain: the browser actually loaded five separate pages before returning here. URLs visited: " +
+                  urls,
+                "Each hop can run scripts, set cookies, fingerprint your browser, or forward you again. In Malaysia, fake eMADANI or TNG promo links spread via WhatsApp and Telegram use these chains to evade detection before landing on the final fake PIN page.",
+                [
+                  "Open browser history (Ctrl+H / Cmd+Y) and count how many distinct “partner” URLs appear for this exercise.",
+                  "Sketch a simple diagram: start at “WhatsApp link” → each hop → “fake TNG login”. Compare it to the chain you just lived through.",
+                  "Discuss: why would an attacker use five cheap domains instead of one? (Hint: blocking, reputation, and resilience.)",
+                ],
+              );
+            }
+          }, 100);
+        }
+
+        // Fixed: Fire immediately if DOM is already loaded, otherwise wait.
+        if (document.readyState === "loading") {
+          document.addEventListener(
+            "DOMContentLoaded",
+            showRoutingChainDebrief,
+          );
+        } else {
+          showRoutingChainDebrief();
+        }
+
+        // --- ACCOUNT VERIFICATION LOGIC ---
+        function updatePinUi(input, meter, btn) {
+          var val = input.value.trim();
+          var isValid = /^\d{6}$/.test(val);
+          meter.textContent =
+            "PIN format: " + (isValid ? "Valid 6 digits" : "Needs 6 digits");
+          meter.classList.remove("warn", "ok");
+          if (!isValid) meter.classList.add("warn");
+          else meter.classList.add("ok");
+
+          var truth = document.querySelector('input[name="pinTruth"]:checked');
+          var ack = document.getElementById("pinNeverAck");
+          var okTruth = truth && truth.value === "never";
+          btn.disabled = !(isValid && okTruth && ack && ack.checked);
+        }
+
+        document
+          .getElementById("verifyAccountBtn")
+          .addEventListener("click", function () {
+            var modal = document.createElement("div");
+            modal.className = "modal-overlay";
+            modal.innerHTML =
+              '<div class="modal-box" style="max-width:440px;">' +
+              '<h3 style="margin-bottom:0.5rem;">Wallet Verification</h3>' +
+              '<p style="font-size:0.82rem;color:#64748b;margin-bottom:0.65rem;">Training gate: Scammers use fake reward campaigns (like eMADANI/eBelia) to trick you into entering your PIN. Answer correctly to proceed.</p>' +
+              '<p style="font-size:0.8rem;font-weight:600;margin-bottom:0.35rem;">Which statement is true?</p>' +
+              '<label style="display:block;margin:0.3rem 0;font-size:0.88rem;cursor:pointer;"><input type="radio" name="pinTruth" value="bad"> TNG eWallet needs me to type my PIN on this website to process my reward.</label>' +
+              '<label style="display:block;margin:0.3rem 0;font-size:0.88rem;cursor:pointer;"><input type="radio" name="pinTruth" value="never"> The official app never asks for my 6-digit PIN on external web forms.</label>' +
+              '<label style="font-size:0.8rem;font-weight:600;margin:0.75rem 0 0.35rem;">6-digit PIN (use fake numbers)</label>' +
+              '<input type="text" id="pinInput" style="width:100%;margin:0;border:1px solid #cbd5e1;border-radius:0.5rem;padding:0.65rem;" placeholder="e.g. 123456" maxlength="6">' +
+              '<p id="pinMeter" class="seed-meter warn">PIN format: Needs 6 digits</p>' +
+              '<label style="display:flex;align-items:flex-start;gap:0.45rem;font-size:0.8rem;color:#64748b;margin-top:0.5rem;cursor:pointer;">' +
+              '<input type="checkbox" id="pinNeverAck"> I understand submitting my real PIN outside the official app gives attackers full access to my funds.</label>' +
+              '<button type="button" id="submitPin" class="btn btn-primary" style="width:100%;margin-top:0.75rem;background:#0059b3;" disabled>Confirm and continue</button>' +
+              '<button type="button" id="closePin" class="btn btn-ghost" style="width:100%;margin-top:0.35rem;">Close</button>' +
+              '<p style="font-size:0.72rem;color:#94a3b8;margin-top:0.65rem;">Never use real secrets. This button still triggers a phishing debrief.</p></div>';
+            document.body.appendChild(modal);
+
+            var input = document.getElementById("pinInput");
+            var meter = document.getElementById("pinMeter");
+            var submit = document.getElementById("submitPin");
+            function refresh() {
+              updatePinUi(input, meter, submit);
+            }
+
+            input.addEventListener("input", function (e) {
+              this.value = this.value.replace(/[^0-9]/g, "");
+              refresh();
+            });
+
+            modal
+              .querySelectorAll('input[name="pinTruth"]')
+              .forEach(function (r) {
+                r.addEventListener("change", refresh);
+              });
+            document
+              .getElementById("pinNeverAck")
+              .addEventListener("change", refresh);
+            refresh();
+
+            document
+              .getElementById("closePin")
+              .addEventListener("click", function () {
+                modal.remove();
+              });
+            document
+              .getElementById("submitPin")
+              .addEventListener("click", function () {
+                modal.remove();
+                if (window.Mpu4Sim)
+                  window.Mpu4Sim.logSimEvent(
+                    "You cleared every gate and still clicked Confirm — in the wild, you just handed over your TNG eWallet PIN.",
+                    "Phishing pages mimic urgency or promise free money (like fake eMADANI campaigns) to bypass your caution. Attackers use this PIN, along with an OTP they will ask for next, to drain your account.",
+                    [
+                      "Open the real Touch 'n Go eWallet app and note that reward claims happen entirely inside the application, never via web links.",
+                      "Explain to a family member how to spot a fake TNG link sent on WhatsApp.",
+                      "List two signals that prove this page is fake (check the URL bar, check the prompt).",
+                    ],
+                  );
+              });
+          });
+
+        // --- CUSTOMER CARE CHAT LOGIC ---
+        document
+          .getElementById("liveChatBtn")
+          .addEventListener("click", function () {
+            var step = 0;
+            var overlay = document.createElement("div");
+            overlay.className = "modal-overlay";
+            overlay.innerHTML =
+              '<div class="modal-box" style="max-width:460px;">' +
+              '<h3 style="margin-bottom:0.35rem;"><i class="fas fa-headset" style="color:#0059b3;margin-right:0.35rem;"></i>Customer Care</h3>' +
+              '<p style="font-size:0.78rem;color:#64748b;margin-bottom:0.65rem;">Queue #4821 · training simulation</p>' +
+              '<div class="chat-thread" id="chatThread"></div>' +
+              '<button type="button" class="btn btn-ghost" id="chatNext" style="width:100%;margin-bottom:0.5rem;">Next message from agent</button>' +
+              '<input id="chatInput" placeholder="Type a short reply (simulated)" style="width:100%;margin-bottom:0.5rem;padding:8px;border:1px solid #cbd5e1;border-radius:4px;">' +
+              '<button type="button" class="btn btn-primary" id="chatSend" style="width:100%;margin-bottom:0.5rem;background:#0059b3;">Send reply</button>' +
+              '<p style="font-size:0.75rem;font-weight:600;color:#0f172a;margin:0.5rem 0 0.35rem;">Pick an action</p>' +
+              '<button type="button" class="btn btn-primary" id="chatBad" style="width:100%;margin-bottom:0.35rem;background:#7f1d1d;">Install AnyDesk for “system sync”</button>' +
+              '<button type="button" class="btn btn-primary" id="chatBad2" style="width:100%;margin-bottom:0.35rem;background:#9a3412;">Provide the 6-digit SMS OTP here</button>' +
+              '<button type="button" class="btn btn-ghost" id="chatGood" style="width:100%;">End chat — I will use the official app or Careline number</button>' +
+              '<button type="button" id="chatClose" class="btn btn-ghost" style="width:100%;margin-top:0.35rem;">Close window</button></div>';
+            document.body.appendChild(overlay);
+
+            var thread = document.getElementById("chatThread");
+            function addMsg(who, text) {
+              var div = document.createElement("div");
+              div.className = "chat-msg " + (who === "you" ? "you" : "them");
+              div.innerHTML =
+                text +
+                '<div class="chat-meta">' +
+                (who === "you" ? "You" : "Agent “TNG_Careline”") +
+                "</div>";
+              thread.appendChild(div);
+              thread.scrollTop = thread.scrollHeight;
+            }
+
+            var script = [
+              "Hi, thanks for reaching out. We noticed an error processing your recent e-Wallet reward claim.",
+              "To manually credit your account, we need to sync your app. Please install 'AnyDesk' from the App Store and share the 9-digit address.",
+              "Alternatively, an SMS with a 6-digit TAC/OTP has just been sent to your number. Please reply with that code to verify ownership.",
+            ];
+
+            document
+              .getElementById("chatNext")
+              .addEventListener("click", function () {
+                if (step >= script.length) {
+                  if (window.Mpu4Sim)
+                    window.Mpu4Sim.showTrainingNotice(
+                      "No more scripted lines — pick an action button or close. Real scammers loop pressure until you comply or leave.",
+                      {
+                        title: "End of script (demo)",
+                        foot: "Practice exiting early: that is a valid defense.",
+                        explanation:
+                          "Scammers impersonating local banks or e-wallets rely heavily on OTP theft and remote access tools.",
+                        followUp: [
+                          "Check your real SMS inbox for any bank/e-wallet OTP message. What does the warning text usually say?",
+                          "List two remote-desktop tools scammers name (like AnyDesk) and your policy for using them.",
+                          "Close this modal with “End chat” and note how it feels to refuse politely.",
+                        ],
+                      },
+                    );
+                  return;
+                }
+                addMsg("them", script[step]);
+                step += 1;
+              });
+
+            document
+              .getElementById("chatSend")
+              .addEventListener("click", function () {
+                var t = (
+                  document.getElementById("chatInput").value || ""
+                ).trim();
+                if (!t) {
+                  if (window.Mpu4Sim)
+                    window.Mpu4Sim.showTrainingNotice(
+                      "Type anything to simulate a victim replying—attackers log every keystroke.",
+                      {
+                        title: "Empty reply (demo)",
+                        foot: "Even benign text trains rapport before the big ask.",
+                        explanation:
+                          "Social engineering warms you up before asking for the OTP or AnyDesk installation.",
+                        followUp: [
+                          "Draft a single-line reply you would never send (“I will not share my OTP”).",
+                        ],
+                      },
+                    );
+                  return;
+                }
+                addMsg("you", t);
+                document.getElementById("chatInput").value = "";
+              });
+
+            document
+              .getElementById("chatBad")
+              .addEventListener("click", function () {
+                overlay.remove();
+                if (window.Mpu4Sim)
+                  window.Mpu4Sim.logSimEvent(
+                    "You chose to install remote-desktop software (AnyDesk) — that hands your phone's screen over to criminals.",
+                    "Support scams steer victims toward remote apps, allowing them to read your incoming OTP SMS directly off your screen without you realizing it.",
+                    [
+                      "Draft a refusal script you could read aloud if someone demands remote access over the phone.",
+                      "Bookmark the official TNG Careline number in your contacts.",
+                    ],
+                  );
+              });
+
+            document
+              .getElementById("chatBad2")
+              .addEventListener("click", function () {
+                overlay.remove();
+                if (window.Mpu4Sim)
+                  window.Mpu4Sim.logSimEvent(
+                    "You offered to provide your OTP into the chat — this allows the scammer to instantly log into your eWallet on their device.",
+                    "OTP (One Time Passwords) are the final defense. Real staff will NEVER ask you to type an OTP into a chat window or read it over the phone.",
+                    [
+                      "Pair exercise: one plays pushy agent claiming your account will be frozen, the other refuses to provide the OTP.",
+                      "Write an if/then: “If chat asks for my TAC/OTP, then I will …”",
+                    ],
+                  );
+              });
+
+            document
+              .getElementById("chatGood")
+              .addEventListener("click", function () {
+                overlay.remove();
+                if (window.Mpu4Sim)
+                  window.Mpu4Sim.showTrainingNotice(
+                    "You ended the chat and committed to opening support from the official app only — that breaks the scam funnel.",
+                    {
+                      title: "Safer path (demo)",
+                      foot: "If you still need help, initiate contact from the official app or published phone number.",
+                      explanation:
+                        "Scammers cannot survive if users refuse out-of-band verification shortcuts.",
+                      followUp: [
+                        "Find the official TNG Customer Care number inside the real app.",
+                        "Teach a family member the “hang up, call back on a known number” pattern.",
+                      ],
+                    },
+                  );
+              });
+
+            document
+              .getElementById("chatClose")
+              .addEventListener("click", function () {
+                overlay.remove();
+              });
+          });
+
+        document
+          .getElementById("claimGiveawayBtn")
+          .addEventListener("click", function () {
+            window.location.href = "mpu4-route-chain.html?hop=0";
+          });
+      })();
+    </script>
+  </body>
+</html>

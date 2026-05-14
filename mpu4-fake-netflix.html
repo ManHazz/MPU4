@@ -1,0 +1,574 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Netflix — TV &amp; movies</title>
+    <link
+      href="https://fonts.googleapis.com/css2?family=DM+Sans:ital,opsz,wght@0,9..40,400;0,9..40,500;0,9..40,600;0,9..40,700&display=swap"
+      rel="stylesheet"
+    />
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css"
+    />
+    <link rel="stylesheet" href="mpu4-fake-sim-common.css" />
+    <style>
+      body.site-netflix {
+        --btn: #e50914;
+        background: #0a0a0a;
+        color: #f5f5f4;
+        margin: 0;
+      }
+      body.site-netflix .top-bar {
+        background: #141414;
+        border-color: #262626;
+        display: flex;
+        justify-content: space-between;
+        padding: 15px 20px;
+        align-items: center;
+        border-bottom: 1px solid #262626;
+      }
+      body.site-netflix nav.top-nav {
+        display: flex;
+        gap: 15px;
+      }
+      body.site-netflix nav.top-nav a {
+        color: #a3a3a3;
+        text-decoration: none;
+      }
+      body.site-netflix nav.top-nav a:hover {
+        color: #fff;
+      }
+      body.site-netflix .hub-link {
+        background: #141414;
+        border-color: #404040;
+        color: #fafafa;
+        padding: 8px 15px;
+        border-radius: 4px;
+        text-decoration: none;
+        border: 1px solid #404040;
+      }
+      body.site-netflix .hero {
+        padding: 40px 20px;
+        text-align: center;
+      }
+      body.site-netflix .hero h1 {
+        color: #fff;
+        margin-bottom: 10px;
+      }
+      body.site-netflix .hero p.lead {
+        color: #a3a3a3;
+        max-width: 600px;
+        margin: 0 auto;
+      }
+      body.site-netflix .content-grid {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 20px;
+        padding: 20px;
+        max-width: 1000px;
+        margin: 0 auto;
+      }
+      body.site-netflix .card {
+        background: #141414;
+        border: 1px solid #262626;
+        color: #e5e5e5;
+        padding: 20px;
+        border-radius: 8px;
+      }
+      body.site-netflix .card p.sub {
+        color: #a3a3a3;
+        margin-bottom: 15px;
+        font-size: 0.9rem;
+      }
+      body.site-netflix .video-stage {
+        background: radial-gradient(
+          ellipse at center,
+          #1c1917 0%,
+          #0c0a09 100%
+        );
+        border-radius: 0.75rem;
+        padding: 2rem 1.25rem;
+        text-align: center;
+        border: 1px solid #292524;
+      }
+      body.site-netflix .play-wrap {
+        position: relative;
+        display: inline-block;
+        width: 100%;
+      }
+      body.site-netflix .play-btn {
+        position: relative;
+        z-index: 1;
+        padding: 0.85rem 2rem;
+        background: #e50914;
+        border: none;
+        border-radius: 4px;
+        color: #fff;
+        font-weight: 700;
+        font-size: 1rem;
+        cursor: pointer;
+        width: 100%;
+      }
+      body.site-netflix .clickjack-iframe.armed {
+        pointer-events: auto;
+        z-index: 10;
+      }
+      body.site-netflix .clickjack-iframe.disarmed {
+        pointer-events: none;
+        z-index: -1;
+      }
+      body.site-netflix .clickjack-iframe.teach-outline {
+        opacity: 1 !important;
+        outline: 3px dashed #fb923c;
+        outline-offset: -3px;
+        background: rgba(251, 146, 60, 0.3) !important;
+      }
+      body.site-netflix .quiz-opt {
+        display: block;
+        margin: 0.35rem 0;
+        padding: 0.45rem 0.5rem;
+        border: 1px solid #404040;
+        border-radius: 0.5rem;
+        cursor: pointer;
+        text-align: left;
+        font-size: 0.9rem;
+      }
+
+      .prog-wrap {
+        height: 10px;
+        background: #262626;
+        border-radius: 5px;
+        overflow: hidden;
+        margin: 15px 0;
+      }
+      .prog-fill {
+        height: 100%;
+        width: 0%;
+        background: #e50914;
+        transition: width 0.3s;
+      }
+      .codec-step {
+        display: none;
+      }
+      .codec-step.active {
+        display: block;
+      }
+
+      /* Fake browser hijacker toolbar */
+      #malware-toolbar {
+        display: none;
+        background: #d1d5db;
+        color: #111827;
+        padding: 8px 20px;
+        font-family: sans-serif;
+        font-size: 13px;
+        align-items: center;
+        gap: 15px;
+        border-bottom: 3px solid #ef4444;
+      }
+      #malware-toolbar input {
+        padding: 4px;
+        border: 1px solid #9ca3af;
+        flex-grow: 1;
+        max-width: 300px;
+      }
+      #malware-toolbar button {
+        background: #3b82f6;
+        color: white;
+        border: none;
+        padding: 4px 12px;
+        cursor: pointer;
+      }
+    </style>
+  </head>
+  <body class="site-netflix">
+    <div id="malware-toolbar">
+      <strong style="color: #ef4444"
+        ><i class="fas fa-bug"></i> MediaSearch Pro</strong
+      >
+      <span>Search the web:</span>
+      <input type="text" value="Free movie downloads" />
+      <button>Search</button>
+      <span style="color: #6b7280; font-size: 11px">Ads by SearchProtect</span>
+    </div>
+
+    <div id="main-ui">
+      <header class="top-bar">
+        <div class="brand">
+          <span
+            style="
+              color: #e50914;
+              font-weight: 900;
+              font-size: 1.35rem;
+              letter-spacing: -0.02em;
+            "
+            >N</span
+          ><span style="font-weight: 700">ETFLIX</span>
+        </div>
+        <nav class="top-nav">
+          <a href="#">Home</a><a href="#">TV Shows</a><a href="#">Movies</a>
+        </nav>
+        <a class="hub-link" id="dashboardReturn" href="mpu4-fake-web.html"
+          ><i class="fas fa-arrow-left"></i> Dashboard</a
+        >
+      </header>
+
+      <main>
+        <div class="hero">
+          <h1>Unlimited movies, TV shows, and more.</h1>
+          <p class="lead">
+            Labs: deceptive media player updates, a clickjacking trap, and
+            exit-intent scareware. Move your mouse out of the browser window to
+            trigger the exit trap.
+          </p>
+        </div>
+        <div class="content-grid cols-2">
+          <div class="card">
+            <h2>Video Player Update Required</h2>
+            <p class="sub">
+              Your current HTML5 player is out of date. HD playback is disabled.
+            </p>
+            <div class="video-stage" style="padding: 1.25rem">
+              <i
+                class="fas fa-triangle-exclamation"
+                style="font-size: 2.25rem; color: #e50914; opacity: 0.9"
+              ></i>
+              <p style="margin: 0.75rem 0; color: #a8a29e; font-size: 0.88rem">
+                Error Code: HEVC-404
+              </p>
+              <button
+                type="button"
+                class="btn btn-primary"
+                id="codecWizardBtn"
+                style="
+                  background: #e50914;
+                  border: none;
+                  padding: 10px 20px;
+                  border-radius: 4px;
+                  color: white;
+                  font-weight: bold;
+                  cursor: pointer;
+                "
+              >
+                Install Missing Codec
+              </button>
+            </div>
+          </div>
+
+          <div class="card">
+            <h2>Continue watching</h2>
+            <p class="sub">
+              Resume where you left off with your favorite shows.
+            </p>
+            <label class="quiz-opt" style="border-style: dashed"
+              ><input type="checkbox" id="cjArm" /> Arm transparent trap layer
+              (demo)</label
+            >
+            <label class="quiz-opt" style="border-style: dashed"
+              ><input type="checkbox" id="cjOutline" /> Highlight trap (orange
+              outline)</label
+            >
+
+            <div class="play-wrap" id="playWrap" style="margin-top: 15px">
+              <button type="button" class="play-btn" id="playMovieBtn">
+                Resume
+              </button>
+
+              <div
+                id="clickjackTrap"
+                class="clickjack-iframe disarmed"
+                style="
+                  position: absolute;
+                  top: 0;
+                  left: 0;
+                  width: 100%;
+                  height: 100%;
+                  cursor: pointer;
+                  background: transparent;
+                "
+              ></div>
+            </div>
+
+            <p
+              id="cjStatus"
+              style="font-size: 0.78rem; color: #78716c; margin-top: 0.65rem"
+            >
+              Trap: <strong>disarmed</strong> — clicks go to Resume.
+            </p>
+          </div>
+        </div>
+      </main>
+    </div>
+
+    <div
+      id="phishing-ui"
+      style="
+        display: none;
+        height: 100vh;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        background: #000;
+        color: #fff;
+      "
+    >
+      <h1 style="color: #e50914; font-size: 3rem; margin-bottom: 20px">
+        NETFLIX
+      </h1>
+      <div
+        style="
+          background: #141414;
+          padding: 40px;
+          border-radius: 8px;
+          width: 100%;
+          max-width: 350px;
+          border: 1px solid #333;
+        "
+      >
+        <h2 style="margin-bottom: 10px">Sign In to Verify</h2>
+        <div
+          style="
+            background: #7f1d1d;
+            color: #fecaca;
+            padding: 10px;
+            border-radius: 4px;
+            margin-bottom: 20px;
+            font-size: 0.85rem;
+            border: 1px solid #ef4444;
+          "
+        >
+          <i class="fas fa-triangle-exclamation"></i> Your account has been
+          temporarily restricted due to suspicious activity. Please verify your
+          credentials.
+        </div>
+        <input
+          type="text"
+          placeholder="Email or phone number"
+          style="
+            width: 100%;
+            margin-bottom: 15px;
+            padding: 12px;
+            box-sizing: border-box;
+            background: #333;
+            border: none;
+            color: white;
+            border-radius: 4px;
+          "
+        />
+        <input
+          type="password"
+          placeholder="Password"
+          style="
+            width: 100%;
+            margin-bottom: 20px;
+            padding: 12px;
+            box-sizing: border-box;
+            background: #333;
+            border: none;
+            color: white;
+            border-radius: 4px;
+          "
+        />
+        <button
+          onclick="
+            alert(
+              'CREDENTIALS COMPROMISED!\n\nBecause you panicked and believed the exit-intent popup, you were funneled into a phishing page. Notice the URL hasn\'t changed, but the UI looks like a real login.',
+            )
+          "
+          style="
+            width: 100%;
+            background: #e50914;
+            color: white;
+            border: none;
+            padding: 12px;
+            cursor: pointer;
+            font-weight: bold;
+            font-size: 1rem;
+            border-radius: 4px;
+          "
+        >
+          Verify Account
+        </button>
+      </div>
+    </div>
+
+    <script src="mpu4-fake-sim-common.js"></script>
+    <script>
+      (function () {
+        // --- MEDIA CODEC WIZARD (Experiential) ---
+        document
+          .getElementById("codecWizardBtn")
+          .addEventListener("click", function () {
+            var modal = document.createElement("div");
+            modal.className = "modal-overlay";
+            modal.innerHTML = `
+            <div class="modal-box dark" style="max-width:450px; background:#141414; border:1px solid #333; color:#f5f5f4;">
+              <h3 style="margin-bottom:0.5rem; color:#fff;">HD Codec Setup</h3>
+              
+              <div id="cw1" class="codec-step active">
+                <p style="font-size:0.88rem; color:#a3a3a3;">Analyzing system requirements...</p>
+                <div class="prog-wrap"><div class="prog-fill" id="cwScanProg" style="width:0%;"></div></div>
+                <p id="cwScanText" style="font-size:0.8rem; color:#e50914; display:none;">Critical components missing. Manual update required.</p>
+                <button type="button" id="cwNext1" style="width:100%; margin-top:1rem; background:#E50914; color:white; border:none; padding:10px; cursor:pointer; border-radius:4px; display:none;">Proceed to Download</button>
+              </div>
+
+              <div id="cw2" class="codec-step">
+                <p style="font-size:0.9rem; margin-bottom:10px;">Select your installation preferences:</p>
+                <div style="background:#262626; padding:10px; border-radius:4px; margin-bottom:15px;">
+                  <label style="display:flex; align-items:flex-start; font-size:0.85rem; cursor:pointer;">
+                    <input type="checkbox" id="pup1" checked style="margin-top:3px; margin-right:8px;"> 
+                    <span>Install SafeSearch Browser Extension (Recommended)</span>
+                  </label>
+                  <label style="display:flex; align-items:flex-start; font-size:0.85rem; margin-top:8px; cursor:pointer;">
+                    <input type="checkbox" id="pup2" checked style="margin-top:3px; margin-right:8px;"> 
+                    <span>Change my default homepage to MediaSearch.net</span>
+                  </label>
+                </div>
+                <p style="font-size:0.75rem; color:#737373; margin-bottom:15px;">By clicking 'Accept', you agree to download HD_Codec_Pack_v4.exe</p>
+                <div style="display:flex; gap:10px;">
+                  <button type="button" id="cwDecline" style="background:transparent; border:1px solid #737373; color:#a3a3a3; padding:8px; width:40%; cursor:pointer; border-radius:4px;">Decline</button>
+                  <button type="button" id="cwAccept" style="background:#e50914; border:none; color:#fff; padding:8px; width:60%; cursor:pointer; font-weight:bold; border-radius:4px;">Accept & Install</button>
+                </div>
+              </div>
+            </div>`;
+            document.body.appendChild(modal);
+
+            setTimeout(() => {
+              document.getElementById("cwScanProg").style.width = "100%";
+            }, 100);
+            setTimeout(() => {
+              document.getElementById("cwScanText").style.display = "block";
+              document.getElementById("cwNext1").style.display = "block";
+            }, 1200);
+
+            modal.querySelector("#cwNext1").onclick = function () {
+              modal.querySelector("#cw1").classList.remove("active");
+              modal.querySelector("#cw2").classList.add("active");
+            };
+
+            modal.querySelector("#cwDecline").onclick = function () {
+              modal.remove();
+              if (window.Mpu4Sim)
+                window.Mpu4Sim.showTrainingNotice(
+                  "Good catch. You declined the deceptive installation.",
+                  { title: "Threat Avoided" },
+                );
+            };
+
+            modal.querySelector("#cwAccept").onclick = function () {
+              modal.remove();
+              document.getElementById("malware-toolbar").style.display = "flex";
+              document.body.style.borderTop = "5px solid #ef4444";
+              alert(
+                "SYSTEM COMPROMISED!\n\nYou accepted the fake update. Notice the injected search toolbar at the top of your screen? This simulates a browser hijacker (PUP) silently installing because the deceptive checkboxes were left checked.",
+              );
+            };
+          });
+
+        // --- CLICKJACKING LOGIC (Experiential) ---
+        var cjTrap = document.getElementById("clickjackTrap");
+        var cjArm = document.getElementById("cjArm");
+        var cjOutline = document.getElementById("cjOutline");
+        var cjStatus = document.getElementById("cjStatus");
+
+        function applyCjState() {
+          var armed = cjArm && cjArm.checked;
+          cjTrap.classList.toggle("armed", armed);
+          cjTrap.classList.toggle("disarmed", !armed);
+          cjTrap.classList.toggle(
+            "teach-outline",
+            cjOutline && cjOutline.checked,
+          );
+          if (cjStatus) {
+            cjStatus.innerHTML = armed
+              ? 'Trap: <strong style="color:#fb923c;">armed</strong> — your next click may be hijacked.'
+              : "Trap: <strong>disarmed</strong> — clicks go to Resume.";
+          }
+        }
+
+        cjArm.addEventListener("change", applyCjState);
+        cjOutline.addEventListener("change", applyCjState);
+        applyCjState();
+
+        // Safe Button Click
+        document
+          .getElementById("playMovieBtn")
+          .addEventListener("click", function (e) {
+            if (cjArm.checked) return;
+            if (window.Mpu4Sim)
+              window.Mpu4Sim.showTrainingNotice(
+                "Resume button works safely because the trap layer is disarmed.",
+                { title: "Clickjack Lab" },
+              );
+          });
+
+        // Hidden Trap Click (Replaces iframe postMessage with direct div click)
+        cjTrap.addEventListener("click", function () {
+          if (!cjArm.checked) return;
+
+          // Render a massive, unmissable pop-up
+          var trapModal = document.createElement("div");
+          trapModal.className = "modal-overlay";
+          trapModal.innerHTML = `
+            <div class="modal-box" style="background:#7f1d1d; border:2px solid #ef4444; text-align:center; padding: 40px; max-width: 400px;">
+              <h2 style="color:#fca5a5; font-size: 2rem; margin-top:0; margin-bottom:15px;"><i class="fas fa-comment-dollar"></i> $99.99 CHARGED!</h2>
+              <p style="font-size:1rem; color: #fff; margin-bottom: 25px;">You thought you clicked 'Resume', but you actually clicked a hidden <b>"1-Click Buy"</b> button that was layered invisibly over it.</p>
+              <button onclick="this.parentElement.parentElement.remove()" style="padding: 10px 25px; cursor: pointer; border: none; background: #fff; color: #7f1d1d; font-weight: bold; border-radius: 4px; font-size: 1rem;">Close Ad</button>
+            </div>
+          `;
+          document.body.appendChild(trapModal);
+          cjStatus.innerHTML = "You were just clickjacked.";
+        });
+
+        // --- EXIT INTENT / SCAREWARE LOGIC (Experiential) ---
+        let scareTriggered = false;
+
+        function triggerScareware(e) {
+          if (scareTriggered) return;
+          if (e && e.type === "click") e.preventDefault();
+          scareTriggered = true;
+
+          var modalDiv = document.createElement("div");
+          modalDiv.className = "modal-overlay";
+          modalDiv.innerHTML = `
+            <div class="modal-box dark" style="text-align:center; max-width:400px; background:#141414; border:2px solid #e50914;">
+              <div style="width:60px; height:60px; margin:0 auto 1rem; background:#7f1d1d; border-radius:50%; display:flex; align-items:center; justify-content:center;">
+                <i class="fas fa-lock" style="color:#fecaca; font-size:1.5rem;"></i>
+              </div>
+              <h3 style="margin-bottom:0.5rem; color:#e50914;">Unusual Sign-in Attempt Prevented</h3>
+              <p style="font-size:0.9rem; color:#a3a3a3; margin-bottom:1rem;">We detected a login from an unrecognized location (Russia, IP: 45.12.x.x). For your security, this page cannot be closed until you verify your account.</p>
+              <button type="button" id="scareVerify" style="background:#e50914; color:#fff; border:none; width:100%; padding:10px; font-weight:bold; cursor:pointer; margin-bottom:10px; border-radius:4px;">Verify Account Now</button>
+              <button type="button" id="scareDismiss" style="background:transparent; color:#737373; border:none; width:100%; cursor:pointer; font-size:0.8rem; text-decoration:underline;">Leave page anyway (Not Recommended)</button>
+            </div>`;
+          document.body.appendChild(modalDiv);
+
+          modalDiv.querySelector("#scareVerify").onclick = function () {
+            modalDiv.remove();
+            document.getElementById("main-ui").style.display = "none";
+            document.getElementById("malware-toolbar").style.display = "none";
+            document.getElementById("phishing-ui").style.display = "flex";
+          };
+
+          modalDiv.querySelector("#scareDismiss").onclick = function () {
+            modalDiv.remove();
+            if (window.Mpu4Sim)
+              window.Mpu4Sim.showTrainingNotice(
+                "Good job. You bypassed the scareware and realized websites cannot lock you in.",
+                { title: "Trap Avoided" },
+              );
+          };
+        }
+
+        document.addEventListener("mouseleave", function (e) {
+          if (e.clientY < 10) triggerScareware(e);
+        });
+
+        document
+          .getElementById("dashboardReturn")
+          .addEventListener("click", triggerScareware);
+      })();
+    </script>
+  </body>
+</html>

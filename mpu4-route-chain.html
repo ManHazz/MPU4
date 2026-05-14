@@ -1,0 +1,210 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Partner verification…</title>
+    <style>
+      * {
+        box-sizing: border-box;
+        margin: 0;
+        padding: 0;
+      }
+      body {
+        min-height: 100vh;
+        font-family:
+          system-ui,
+          -apple-system,
+          "Segoe UI",
+          Roboto,
+          sans-serif;
+        background: #0b1220;
+        color: #e2e8f0;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        padding: 1.25rem;
+      }
+      .chrome {
+        width: 100%;
+        max-width: 520px;
+        background: #1e293b;
+        border-radius: 10px 10px 0 0;
+        border: 1px solid #334155;
+        border-bottom: none;
+        padding: 8px 10px;
+        display: flex;
+        align-items: center;
+        gap: 8px;
+        font-size: 11px;
+        color: #94a3b8;
+      }
+      .chrome-dot {
+        width: 10px;
+        height: 10px;
+        border-radius: 50%;
+        background: #475569;
+      }
+      .chrome-url {
+        flex: 1;
+        background: #0f172a;
+        border-radius: 6px;
+        padding: 6px 10px;
+        font-family: ui-monospace, monospace;
+        font-size: 11px;
+        color: #86efac;
+        overflow: hidden;
+        text-overflow: ellipsis;
+        white-space: nowrap;
+      }
+      .card {
+        width: 100%;
+        max-width: 520px;
+        background: #1e293b;
+        border: 1px solid #334155;
+        border-radius: 0 0 10px 10px;
+        padding: 1.5rem 1.25rem 1.25rem;
+        text-align: center;
+      }
+      h1 {
+        font-size: 1.05rem;
+        margin-bottom: 0.35rem;
+        color: #f8fafc;
+      }
+      .hop {
+        font-size: 0.8rem;
+        color: #94a3b8;
+        margin-bottom: 1rem;
+      }
+      .label {
+        font-size: 0.75rem;
+        color: #64748b;
+        text-transform: uppercase;
+        letter-spacing: 0.06em;
+        margin-bottom: 0.25rem;
+      }
+      .spinner {
+        width: 36px;
+        height: 36px;
+        margin: 0.75rem auto;
+        border: 3px solid #334155;
+        border-top-color: #38bdf8;
+        border-radius: 50%;
+        animation: spin 0.75s linear infinite;
+      }
+      @keyframes spin {
+        to {
+          transform: rotate(360deg);
+        }
+      }
+      .note {
+        margin-top: 1rem;
+        font-size: 0.72rem;
+        color: #64748b;
+        line-height: 1.45;
+      }
+      a.cancel {
+        display: inline-block;
+        margin-top: 0.75rem;
+        color: #94a3b8;
+        font-size: 0.8rem;
+      }
+      a.cancel:hover {
+        color: #e2e8f0;
+      }
+    </style>
+  </head>
+  <body>
+    <div class="chrome">
+      <span class="chrome-dot"></span><span class="chrome-dot"></span
+      ><span class="chrome-dot"></span>
+      <div class="chrome-url" id="urlBar">https://</div>
+    </div>
+    <div class="card">
+      <p class="label" id="partnerLabel">Partner gateway</p>
+      <h1 id="statusTitle">Establishing secure session…</h1>
+      <p class="hop" id="hopText">Hop 1 of 5</p>
+      <div class="spinner" aria-hidden="true"></div>
+      <p class="note">
+        This is a <strong>training redirect chain</strong>. Your browser is
+        really loading each URL in sequence—watch the address bar and your
+        back/history list after the exercise.
+      </p>
+      <a class="cancel" href="mpu4-fake-ewallet.html"
+        >Cancel and return to Touch 'n Go eWallet (demo)</a
+      >
+    </div>
+    <script>
+      (function () {
+        var CHAIN = [
+          {
+            host: "attestor-alpha.net",
+            label: "Partner attestation",
+            path: "/v3/session/init",
+          },
+          {
+            host: "router-beta.io",
+            label: "Edge routing",
+            path: "/cdn/verify",
+          },
+          {
+            host: "verify-gamma.org",
+            label: "Device fingerprint",
+            path: "/api/fp/collect",
+          },
+          {
+            host: "settlement-delta.com",
+            label: "Compliance hold",
+            path: "/kyc/pending",
+          },
+          {
+            host: "allocation-final.io",
+            label: "Reward allocation",
+            path: "/claim/execute",
+          },
+        ];
+        var params = new URLSearchParams(window.location.search);
+        var hop = parseInt(params.get("hop") || "0", 10);
+        if (isNaN(hop) || hop < 0) hop = 0;
+        if (hop >= CHAIN.length) hop = 0;
+
+        var step = CHAIN[hop];
+        var fullUrl = "https://" + step.host + step.path;
+        document.getElementById("urlBar").textContent = fullUrl;
+        document.getElementById("partnerLabel").textContent = step.label;
+        document.getElementById("hopText").textContent =
+          "Hop " +
+          (hop + 1) +
+          " of " +
+          CHAIN.length +
+          " — your tab is navigating like a real chain";
+
+        var delay = hop === CHAIN.length - 1 ? 1400 : 1000;
+
+        setTimeout(function () {
+          if (hop < CHAIN.length - 1) {
+            window.location.replace("mpu4-route-chain.html?hop=" + (hop + 1));
+          } else {
+            try {
+              sessionStorage.setItem(
+                "mpu4RoutingChainMeta",
+                JSON.stringify({
+                  visited: CHAIN.map(function (s) {
+                    return "https://" + s.host + s.path;
+                  }),
+                  hosts: CHAIN.map(function (s) {
+                    return s.host;
+                  }),
+                  finishedAt: new Date().toISOString(),
+                }),
+              );
+            } catch (e) {}
+            // Redirects to the ewallet page with the correct hash trigger
+            window.location.replace("mpu4-fake-ewallet.html#routing-complete");
+          }
+        }, delay);
+      })();
+    </script>
+  </body>
+</html>

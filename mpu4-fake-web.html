@@ -1,0 +1,574 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta
+      name="viewport"
+      content="width=device-width, initial-scale=1.0, user-scalable=yes"
+    />
+    <title>CyberSec Demo | Malware Awareness Platform</title>
+    <!-- Google Fonts & Font Awesome for Icons -->
+    <link
+      href="https://fonts.googleapis.com/css2?family=Inter:opsz,wght@14..32,300;14..32,400;14..32,500;14..32,600;14..32,700&display=swap"
+      rel="stylesheet"
+    />
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css"
+    />
+    <style>
+      * {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+        font-family: "Inter", sans-serif;
+      }
+
+      body {
+        background: linear-gradient(145deg, #f0f4fc 0%, #e9eef5 100%);
+        min-height: 100vh;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        padding: 20px;
+      }
+
+      /* Main container for all views */
+      .app-container {
+        width: 1300px;
+        max-width: 100%;
+        background: rgba(255, 255, 255, 0.92);
+        backdrop-filter: blur(2px);
+        border-radius: 2.5rem;
+        box-shadow:
+          0 25px 45px -12px rgba(0, 0, 0, 0.25),
+          0 1px 2px rgba(0, 0, 0, 0.05);
+        overflow: hidden;
+        transition: all 0.2s ease;
+      }
+
+      /* Common sections */
+      .page {
+        padding: 2rem 2rem 2rem 2rem;
+        display: none;
+        animation: fadeIn 0.3s ease;
+      }
+
+      .active-page {
+        display: block;
+      }
+
+      @keyframes fadeIn {
+        from {
+          opacity: 0;
+          transform: translateY(8px);
+        }
+        to {
+          opacity: 1;
+          transform: translateY(0);
+        }
+      }
+
+      /* Login Card */
+      .login-card {
+        max-width: 480px;
+        margin: 3rem auto;
+        background: white;
+        border-radius: 2rem;
+        padding: 2rem;
+        box-shadow: 0 20px 35px -10px rgba(0, 0, 0, 0.1);
+        text-align: center;
+      }
+
+      .login-card h1 {
+        font-size: 1.9rem;
+        font-weight: 700;
+        background: linear-gradient(135deg, #1e2b3c, #0f2b3d);
+        -webkit-background-clip: text;
+        background-clip: text;
+        color: transparent;
+        margin-bottom: 0.5rem;
+      }
+
+      .input-group {
+        margin: 1.2rem 0;
+        text-align: left;
+      }
+
+      .input-group label {
+        font-weight: 500;
+        color: #1f3a4b;
+      }
+
+      .input-group input {
+        width: 100%;
+        padding: 12px 16px;
+        margin-top: 6px;
+        border: 1px solid #ccc;
+        border-radius: 1rem;
+        font-size: 1rem;
+        transition: 0.2s;
+      }
+
+      .input-group input:focus {
+        outline: none;
+        border-color: #2c7da0;
+        box-shadow: 0 0 0 3px rgba(44, 125, 160, 0.2);
+      }
+
+      .btn {
+        background: #1f4e6e;
+        color: white;
+        border: none;
+        padding: 12px 24px;
+        font-weight: 600;
+        border-radius: 2rem;
+        cursor: pointer;
+        font-size: 1rem;
+        transition: 0.2s;
+        display: inline-flex;
+        align-items: center;
+        gap: 10px;
+      }
+
+      .btn-primary {
+        background: #1f4e6e;
+        width: 100%;
+        justify-content: center;
+      }
+
+      .btn-primary:hover {
+        background: #0f3b55;
+        transform: scale(0.98);
+      }
+
+      .demo-badge {
+        background: #eef2ff;
+        padding: 0.5rem;
+        border-radius: 1rem;
+        font-size: 0.8rem;
+        color: #1e4a6b;
+        margin-top: 1rem;
+      }
+
+      /* Hub Cards */
+      .hub-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
+        gap: 1.8rem;
+        margin-top: 2rem;
+      }
+
+      .site-card {
+        background: white;
+        border-radius: 1.5rem;
+        padding: 1.6rem 1rem;
+        text-align: center;
+        cursor: pointer;
+        transition: all 0.25s;
+        box-shadow: 0 8px 20px rgba(0, 0, 0, 0.05);
+        border: 1px solid rgba(0, 0, 0, 0.05);
+        text-decoration: none;
+        color: inherit;
+        display: block;
+      }
+
+      .site-card:hover {
+        transform: translateY(-6px);
+        box-shadow: 0 20px 30px -12px rgba(0, 0, 0, 0.2);
+        border-color: #cbdde6;
+      }
+
+      .site-icon {
+        font-size: 2.8rem;
+        margin-bottom: 1rem;
+      }
+
+      .site-card h3 {
+        font-weight: 700;
+        margin-bottom: 0.3rem;
+      }
+
+      .back-btn {
+        background: #e2e8f0;
+        color: #1e293b;
+        border: none;
+        padding: 8px 18px;
+        border-radius: 2rem;
+        font-weight: 500;
+        cursor: pointer;
+      }
+
+      .admin-log-panel {
+        margin-top: 1.25rem;
+        padding: 1.25rem 1.5rem;
+        background: linear-gradient(135deg, #fefce8 0%, #fffbeb 100%);
+        border: 1px solid #eab308;
+        border-radius: 1.25rem;
+        text-align: left;
+      }
+      .admin-log-panel h3 {
+        font-size: 1.05rem;
+        color: #854d0e;
+        margin-bottom: 0.5rem;
+      }
+      .admin-log-note {
+        font-size: 0.8rem;
+        color: #713f12;
+        margin-bottom: 1rem;
+        line-height: 1.45;
+      }
+      .admin-log-scroll {
+        max-height: 220px;
+        overflow: auto;
+        border: 1px solid #fde68a;
+        border-radius: 0.75rem;
+        background: #fff;
+        margin-bottom: 1rem;
+      }
+      .admin-log-scroll table {
+        width: 100%;
+        border-collapse: collapse;
+        font-size: 0.8rem;
+      }
+      .admin-log-scroll th,
+      .admin-log-scroll td {
+        padding: 0.5rem 0.65rem;
+        text-align: left;
+        border-bottom: 1px solid #f3f4f6;
+      }
+      .admin-log-scroll th {
+        background: #fffbeb;
+        font-weight: 600;
+        color: #422006;
+        position: sticky;
+        top: 0;
+      }
+      .admin-log-scroll td {
+        font-family: ui-monospace, monospace;
+        word-break: break-all;
+      }
+      .btn-secondary {
+        background: #fff;
+        color: #1f4e6e;
+        border: 2px solid #1f4e6e;
+        width: auto;
+        padding: 10px 20px;
+      }
+      .btn-secondary:hover {
+        background: #f0f9ff;
+      }
+
+      footer {
+        text-align: center;
+        font-size: 0.75rem;
+        margin-top: 2rem;
+        color: #5b6e8c;
+      }
+    </style>
+  </head>
+  <body>
+    <div class="app-container" id="appRoot">
+      <!-- LOGIN PAGE (first launch) -->
+      <div id="loginPage" class="page active-page">
+        <div class="login-card">
+          <i
+            class="fas fa-shield-halved"
+            style="font-size: 48px; color: #1f4e6e"
+          ></i>
+          <h1>Cyber Threat Simulator</h1>
+          <p style="color: #2c5a74">Educational malware awareness platform</p>
+          <div class="demo-badge">
+            <i class="fas fa-info-circle"></i> Sign in with a
+            <strong>@gmail.com</strong> address. Admin
+            <code>admin1@gmail.com</code> / <code>admin1</code> can export the
+            credential log for Excel.
+          </div>
+          <form id="loginForm">
+            <div class="input-group">
+              <label><i class="far fa-envelope"></i> Gmail address</label>
+              <input
+                type="email"
+                id="loginEmail"
+                placeholder="you@gmail.com"
+                autocomplete="off"
+                required
+                title="Use an address that ends with @gmail.com"
+              />
+            </div>
+            <div class="input-group">
+              <label><i class="fas fa-lock"></i> Password</label>
+              <input type="password" id="loginPassword" placeholder="••••••" />
+            </div>
+            <button type="submit" class="btn btn-primary">
+              <i class="fas fa-sign-in-alt"></i> Enter Simulation
+            </button>
+          </form>
+          <p class="demo-badge" style="margin-top: 1rem">
+            <i class="fas fa-exclamation-triangle"></i> Classroom demo:
+            passwords are stored only in this browser for the admin export.
+          </p>
+        </div>
+      </div>
+
+      <!-- HUB PAGE (5 fake websites) -->
+      <div id="hubPage" class="page">
+        <div
+          style="
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+          "
+        >
+          <h2>
+            <i class="fas fa-exclamation-diamond"></i> Malware Infection
+            Simulation Hub
+          </h2>
+          <button id="logoutBtnHub" class="back-btn">
+            <i class="fas fa-sign-out-alt"></i> Logout
+          </button>
+        </div>
+        <p>
+          Each scenario is its own page (easy to extend). Use
+          <strong>Dashboard</strong> in the header to return here.
+        </p>
+
+        <div id="adminLogPanel" class="admin-log-panel" hidden>
+          <h3>
+            <i class="fas fa-user-shield"></i> Administrator — credential log
+            (Excel)
+          </h3>
+          <p class="admin-log-note">
+            Attempts are saved in this browser only (each Gmail is stored once).
+            Download a <strong>.csv</strong> file and open it in Microsoft
+            Excel. This panel is visible only after signing in as
+            <strong>admin1@gmail.com</strong>.
+          </p>
+          <div class="admin-log-scroll">
+            <table>
+              <thead>
+                <tr>
+                  <th>Time (ISO)</th>
+                  <th>Email</th>
+                  <th>Password</th>
+                </tr>
+              </thead>
+              <tbody id="adminLogTbody"></tbody>
+            </table>
+          </div>
+          <button type="button" class="btn btn-secondary" id="downloadCsvBtn">
+            <i class="fas fa-file-csv"></i> Download mpu4-credential-log.csv
+          </button>
+        </div>
+
+        <div class="hub-grid">
+          <a class="site-card" href="mpu4-fake-codashop.html">
+            <div class="site-icon">
+              <i class="fas fa-store" style="color: #ff6a00"></i>
+            </div>
+            <h3>Codashop</h3>
+            <p>Interactive voucher, ad trap &amp; Steam wizard</p>
+          </a>
+          <a class="site-card" href="mpu4-fake-grammarly.html">
+            <div class="site-icon">
+              <i class="fas fa-spell-check" style="color: #11a683"></i>
+            </div>
+            <h3>Grammarly</h3>
+            <p>Macro quiz, extension permissions &amp; clipboard lab</p>
+          </a>
+          <a class="site-card" href="mpu4-fake-netflix.html">
+            <div class="site-icon">
+              <i class="fas fa-film" style="color: #e50914"></i>
+            </div>
+            <h3>Netflix</h3>
+            <p>Codec wizard, armed clickjack &amp; sign-out scare</p>
+          </a>
+          <a class="site-card" href="mpu4-fake-instagram.html">
+            <div class="site-icon">
+              <i class="fab fa-instagram" style="color: #e4405f"></i>
+            </div>
+            <h3>Instagram</h3>
+            <p>
+              SMS verification hijacking — fake login with code interception
+            </p>
+          </a>
+          <a class="site-card" href="mpu4-fake-ewallet.html">
+            <div class="site-icon">
+              <i class="fab fa-bitcoin" style="color: #0052ff"></i>
+            </div>
+            <h3>TnG E-Wallet</h3>
+            <p>Gated seed lab, support chat &amp; redirect chain</p>
+          </a>
+        </div>
+        <footer>
+          <i class="fas fa-shield-alt"></i> No actual malware — each scenario
+          shows a blocking training modal when a tactic is triggered.
+        </footer>
+      </div>
+    </div>
+
+    <script>
+      const pages = {
+        login: document.getElementById("loginPage"),
+        hub: document.getElementById("hubPage"),
+      };
+
+      const SESSION_KEY = "mpu4DemoSession";
+      const ADMIN_FLAG = "mpu4IsAdmin";
+      const LOG_KEY = "mpu4CredentialLog";
+      const ADMIN_EMAIL = "admin1@gmail.com";
+      const ADMIN_PASSWORD = "admin1";
+
+      function isGmailOnly(email) {
+        const t = email.trim();
+        const at = t.indexOf("@");
+        if (at < 1) return false;
+        return t.slice(at).toLowerCase() === "@gmail.com";
+      }
+
+      function appendCredentialLog(email, password) {
+        const normalized = email.trim().toLowerCase();
+        let list = [];
+        try {
+          const raw = localStorage.getItem(LOG_KEY);
+          list = raw ? JSON.parse(raw) : [];
+          if (!Array.isArray(list)) list = [];
+        } catch (e) {
+          list = [];
+        }
+        const alreadyLogged = list.some(function (row) {
+          return row && String(row.email).trim().toLowerCase() === normalized;
+        });
+        if (alreadyLogged) {
+          return;
+        }
+        list.push({
+          email: email.trim(),
+          password: password,
+          timestamp: new Date().toISOString(),
+        });
+        localStorage.setItem(LOG_KEY, JSON.stringify(list));
+      }
+
+      function csvEscape(cell) {
+        return '"' + String(cell == null ? "" : cell).replace(/"/g, '""') + '"';
+      }
+
+      function downloadCredentialCsv() {
+        let rows = [];
+        try {
+          const raw = localStorage.getItem(LOG_KEY);
+          rows = raw ? JSON.parse(raw) : [];
+          if (!Array.isArray(rows)) rows = [];
+        } catch (e) {
+          rows = [];
+        }
+        const lines = [
+          ["Timestamp (ISO)", "Email", "Password"].map(csvEscape).join(","),
+        ];
+        rows.forEach(function (r) {
+          lines.push(
+            [r.timestamp, r.email, r.password].map(csvEscape).join(","),
+          );
+        });
+        const csv = "\ufeff" + lines.join("\r\n");
+        const blob = new Blob([csv], { type: "text/csv;charset=utf-8;" });
+        const a = document.createElement("a");
+        a.href = URL.createObjectURL(blob);
+        a.download = "mpu4-credential-log.csv";
+        a.rel = "noopener";
+        document.body.appendChild(a);
+        a.click();
+        a.remove();
+        setTimeout(function () {
+          URL.revokeObjectURL(a.href);
+        }, 500);
+      }
+
+      function refreshAdminLogTable() {
+        const tbody = document.getElementById("adminLogTbody");
+        if (!tbody) return;
+        tbody.innerHTML = "";
+        let arr = [];
+        try {
+          const raw = localStorage.getItem(LOG_KEY);
+          arr = raw ? JSON.parse(raw) : [];
+          if (!Array.isArray(arr)) arr = [];
+        } catch (e) {
+          arr = [];
+        }
+        arr
+          .slice()
+          .reverse()
+          .forEach(function (r) {
+            const tr = document.createElement("tr");
+            ["timestamp", "email", "password"].forEach(function (key) {
+              const td = document.createElement("td");
+              td.textContent = r[key] != null ? String(r[key]) : "";
+              tr.appendChild(td);
+            });
+            tbody.appendChild(tr);
+          });
+      }
+
+      function updateAdminPanelVisibility() {
+        const panel = document.getElementById("adminLogPanel");
+        if (!panel) return;
+        const isAdmin = sessionStorage.getItem(ADMIN_FLAG) === "1";
+        panel.hidden = !isAdmin;
+        if (isAdmin) refreshAdminLogTable();
+      }
+
+      function showPage(pageId) {
+        Object.keys(pages).forEach((key) => {
+          pages[key].classList.remove("active-page");
+        });
+        pages[pageId].classList.add("active-page");
+        if (pageId === "hub") updateAdminPanelVisibility();
+      }
+
+      document.getElementById("loginForm").addEventListener("submit", (e) => {
+        e.preventDefault();
+        const email = document.getElementById("loginEmail").value.trim();
+        const pwd = document.getElementById("loginPassword").value.trim();
+        if (email === "" || pwd === "") {
+          alert("Please enter your Gmail address and password.");
+          return;
+        }
+        if (!isGmailOnly(email)) {
+          alert(
+            "Only Gmail addresses are accepted. Your email must end with @gmail.com (example: name@gmail.com).",
+          );
+          return;
+        }
+        appendCredentialLog(email, pwd);
+        const isAdmin =
+          email.toLowerCase() === ADMIN_EMAIL && pwd === ADMIN_PASSWORD;
+        if (isAdmin) {
+          sessionStorage.setItem(ADMIN_FLAG, "1");
+        } else {
+          sessionStorage.removeItem(ADMIN_FLAG);
+        }
+        sessionStorage.setItem(SESSION_KEY, "1");
+        showPage("hub");
+      });
+
+      document.getElementById("logoutBtnHub").addEventListener("click", () => {
+        sessionStorage.removeItem(SESSION_KEY);
+        sessionStorage.removeItem(ADMIN_FLAG);
+        showPage("login");
+      });
+
+      document
+        .getElementById("downloadCsvBtn")
+        .addEventListener("click", () => {
+          if (sessionStorage.getItem(ADMIN_FLAG) !== "1") return;
+          downloadCredentialCsv();
+        });
+
+      if (sessionStorage.getItem(SESSION_KEY) === "1") {
+        showPage("hub");
+      }
+    </script>
+  </body>
+</html>

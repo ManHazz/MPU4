@@ -1,0 +1,425 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Instagram</title>
+    <link
+      href="https://fonts.googleapis.com/css2?family=DM+Sans:ital,opsz,wght@0,9..40,400;0,9..40,500;0,9..40,600;0,9..40,700&display=swap"
+      rel="stylesheet"
+    />
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css"
+    />
+    <link rel="stylesheet" href="mpu4-fake-sim-common.css" />
+    <style>
+      * {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+      }
+
+      body {
+        font-family:
+          -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Oxygen, Ubuntu,
+          Cantarell, sans-serif;
+        background: #fafafa;
+        position: relative;
+      }
+
+      .hub-link {
+        position: absolute;
+        top: 20px;
+        right: 20px;
+        background: #fff;
+        border: 1px solid #dbdbdb;
+        color: #262626;
+        padding: 8px 15px;
+        border-radius: 4px;
+        text-decoration: none;
+        font-weight: 600;
+        font-size: 14px;
+        display: flex;
+        align-items: center;
+        gap: 8px;
+        transition: background 0.2s;
+        z-index: 100;
+        box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
+      }
+
+      .hub-link:hover {
+        background: #fafafa;
+        color: #000;
+      }
+
+      .container {
+        display: flex;
+        height: 100vh;
+      }
+
+      .left {
+        flex: 1;
+        background: linear-gradient(
+          45deg,
+          #405de6 0%,
+          #5851db 5%,
+          #833ab4 45%,
+          #c13584 60%,
+          #e1306c 90%,
+          #fd1d1d 100%
+        );
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        color: white;
+      }
+
+      .phone-frame {
+        width: 280px;
+        height: 580px;
+        background: #111;
+        border-radius: 40px;
+        padding: 12px;
+        border: 8px solid #222;
+        box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+      }
+
+      .phone-screen {
+        width: 100%;
+        height: 100%;
+        background: white;
+        border-radius: 35px;
+        overflow: hidden;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        padding: 20px;
+        text-align: center;
+      }
+
+      .instagram-logo {
+        font-size: 32px;
+        font-weight: 600;
+        color: #000;
+        font-family: "Segoe Print", cursive;
+        letter-spacing: 2px;
+        margin-bottom: 30px;
+      }
+
+      .right {
+        flex: 1;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        padding: 40px;
+      }
+
+      .login-box {
+        width: 100%;
+        max-width: 350px;
+        border: 1px solid #dbdbdb;
+        background: white;
+        padding: 40px 20px;
+        border-radius: 5px;
+        text-align: center;
+      }
+
+      .ig-logo {
+        width: 175px;
+        height: 52px;
+        margin: 0 auto 25px;
+        font-size: 32px;
+        font-weight: 600;
+        color: #000;
+        font-family: "Segoe Print", cursive;
+        letter-spacing: 2px;
+      }
+
+      .step-indicator {
+        color: #65676b;
+        font-size: 12px;
+        margin-bottom: 20px;
+      }
+
+      .step-title {
+        font-size: 20px;
+        font-weight: 600;
+        margin-bottom: 8px;
+        color: #000;
+      }
+
+      .step-subtitle {
+        color: #65676b;
+        font-size: 13px;
+        line-height: 1.4;
+        margin-bottom: 20px;
+      }
+
+      input {
+        width: 100%;
+        padding: 9px 0;
+        margin: 5px 0 8px;
+        border: 1px solid #ccc;
+        border-radius: 5px;
+        font-size: 12px;
+        background: #fafafa;
+        padding: 10px;
+        border-radius: 5px;
+      }
+
+      input:focus {
+        outline: none;
+        background: #fff;
+        border: 1px solid #b3b3b3;
+      }
+
+      button {
+        width: 100%;
+        padding: 8px 0;
+        margin-top: 8px;
+        background: linear-gradient(90deg, #405de6, #5851db);
+        color: white;
+        border: none;
+        border-radius: 8px;
+        font-weight: 600;
+        font-size: 14px;
+        cursor: pointer;
+        transition: opacity 0.2s;
+      }
+
+      button:hover {
+        opacity: 0.9;
+      }
+
+      button:disabled {
+        opacity: 0.5;
+        cursor: not-allowed;
+      }
+
+      .help-text {
+        color: #0095f6;
+        text-decoration: none;
+        font-size: 12px;
+        margin-top: 12px;
+        cursor: pointer;
+        display: inline-block;
+      }
+
+      .divider {
+        color: #65676b;
+        margin: 15px 0;
+        font-size: 13px;
+      }
+
+      .signup {
+        margin-top: 15px;
+        font-size: 13px;
+        color: #65676b;
+      }
+
+      .signup a {
+        color: #0095f6;
+        text-decoration: none;
+        cursor: pointer;
+      }
+
+      .alert {
+        background: #f8f8f8;
+        border-left: 4px solid #e1306c;
+        padding: 12px;
+        margin: 15px 0;
+        border-radius: 4px;
+        font-size: 12px;
+        text-align: left;
+        color: #000;
+      }
+
+      .code-input-group {
+        display: flex;
+        gap: 8px;
+        margin: 15px 0;
+        justify-content: center;
+      }
+
+      .code-digit {
+        width: 40px;
+        height: 45px;
+        font-size: 24px;
+        text-align: center;
+        border: 2px solid #ddd;
+        border-radius: 8px;
+        font-weight: 600;
+      }
+    </style>
+  </head>
+  <body>
+    <a class="hub-link" href="mpu4-fake-web.html">
+      <i class="fas fa-arrow-left"></i> Dashboard
+    </a>
+
+    <div class="container">
+      <div class="left">
+        <div class="phone-frame">
+          <div class="phone-screen">
+            <div class="instagram-logo">Instagram</div>
+            <p style="font-size: 12px; color: #999">Tap to log in</p>
+          </div>
+        </div>
+      </div>
+
+      <div class="right">
+        <div class="login-box">
+          <div class="ig-logo">Instagram</div>
+
+          <div id="step1" class="step-container">
+            <div class="step-indicator">Step 1 of 2</div>
+            <div class="step-title">Find Your Account</div>
+            <div class="step-subtitle">
+              Enter your email, phone, or username
+            </div>
+            <input
+              type="text"
+              id="username"
+              placeholder="Email, phone, or username"
+              autocomplete="off"
+            />
+            <button onclick="goToStep2()">Next</button>
+          </div>
+
+          <div id="step2" class="step-container" style="display: none">
+            <div class="alert">
+              <strong>Unusual login attempt detected</strong><br />
+              We need to verify this is you. Check your phone for a code.
+            </div>
+            <div class="step-indicator">Step 2 of 2 - Verification</div>
+            <div class="step-title">Enter Security Code</div>
+            <div class="step-subtitle">
+              We've sent a 6-digit code to your phone ending in ••89
+            </div>
+            <input
+              type="text"
+              id="smsCode"
+              placeholder="000000"
+              maxlength="6"
+              inputmode="numeric"
+              autocomplete="off"
+              style="
+                text-align: center;
+                letter-spacing: 8px;
+                font-size: 24px;
+                font-weight: 600;
+              "
+            />
+            <button onclick="submitCode()">Confirm</button>
+            <div class="help-text" onclick="goBackToStep1()">← Back</div>
+            <div
+              class="help-text"
+              style="margin-left: 20px"
+              onclick="alert('Resend code feature disabled in training')"
+            >
+              Didn't receive a code?
+            </div>
+          </div>
+
+          <div id="step3" class="step-container" style="display: none">
+            <div
+              class="alert"
+              style="border-left-color: #31a24c; background: #f0fdf4"
+            >
+              <strong style="color: #31a24c">✓ Code verified</strong><br />
+              Creating your session...
+            </div>
+            <div
+              style="
+                text-align: center;
+                color: #65676b;
+                margin-top: 20px;
+                font-size: 13px;
+              "
+            >
+              Please wait while we process your login.
+            </div>
+          </div>
+
+          <div class="divider">or</div>
+          <div
+            class="help-text"
+            onclick="alert('This training module cannot proceed')"
+          >
+            Log in with Facebook
+          </div>
+          <div class="signup">
+            Don't have an account?
+            <a onclick="alert('Sign up feature disabled in training')"
+              >Sign up</a
+            >
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <script src="mpu4-fake-sim-common.js"></script>
+    <script>
+      function goToStep2() {
+        const username = document.getElementById("username").value.trim();
+        if (!username) {
+          alert("Please enter a valid username or email");
+          return;
+        }
+        document.getElementById("step1").style.display = "none";
+        document.getElementById("step2").style.display = "block";
+        document.getElementById("smsCode").focus();
+      }
+
+      function goBackToStep1() {
+        document.getElementById("step1").style.display = "block";
+        document.getElementById("step2").style.display = "none";
+        document.getElementById("username").value = "";
+        document.getElementById("smsCode").value = "";
+      }
+
+      function submitCode() {
+        const code = document.getElementById("smsCode").value.trim();
+        if (code.length !== 6 || isNaN(code)) {
+          alert("Please enter a valid 6-digit code");
+          return;
+        }
+
+        // Show step 3
+        document.getElementById("step2").style.display = "none";
+        document.getElementById("step3").style.display = "block";
+
+        // Trigger training modal
+        setTimeout(function () {
+          if (window.Mpu4Sim) {
+            window.Mpu4Sim.logSimEvent(
+              "You entered the SMS verification code on a fake Instagram website.",
+              "The attacker intercepted this code and used it to reset the real account on instagram.com, locking you out and taking control of your account.",
+              [
+                "Never enter SMS codes on websites you did not navigate to directly from your phone.",
+                "Real Instagram will NEVER ask you to verify via a web page—codes go directly to the app.",
+                "Always verify the domain in your address bar is actually instagram.com before entering any codes.",
+              ],
+            );
+          }
+        }, 1500);
+      }
+
+      // Allow Enter key submission
+      document.addEventListener("DOMContentLoaded", function () {
+        document
+          .getElementById("smsCode")
+          .addEventListener("keypress", function (e) {
+            if (e.key === "Enter") submitCode();
+          });
+        document
+          .getElementById("username")
+          .addEventListener("keypress", function (e) {
+            if (e.key === "Enter") goToStep2();
+          });
+      });
+    </script>
+  </body>
+</html>

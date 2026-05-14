@@ -1,0 +1,499 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Grammarly — Writing assistant</title>
+    <link
+      href="https://fonts.googleapis.com/css2?family=DM+Sans:ital,opsz,wght@0,9..40,400;0,9..40,500;0,9..40,600;0,9..40,700&family=Fraunces:opsz,wght@9..144,600;9..144,700&display=swap"
+      rel="stylesheet"
+    />
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css"
+    />
+    <link rel="stylesheet" href="mpu4-fake-sim-common.css" />
+    <style>
+      body.site-grammarly {
+        --btn: #11a683;
+        min-height: 100vh;
+        overflow-y: auto;
+        overflow-x: hidden;
+        padding-bottom: 2rem;
+      }
+      body.site-grammarly .hero h1 {
+        font-family: "Fraunces", serif;
+        font-weight: 700;
+        color: #0f172a;
+      }
+      body.site-grammarly .card h2 {
+        color: #0c4a3e;
+      }
+      .lab-hint {
+        font-size: 0.78rem;
+        color: #0f766e;
+        margin-top: 0.45rem;
+        line-height: 1.45;
+      }
+      .perm-row {
+        border: 1px solid var(--line);
+        border-radius: 0.5rem;
+        padding: 0.5rem 0.65rem;
+        margin-bottom: 0.45rem;
+        background: #fafafa;
+      }
+      .perm-row label {
+        display: flex;
+        align-items: flex-start;
+        gap: 0.5rem;
+        font-size: 0.88rem;
+        cursor: pointer;
+      }
+      .paste-zone {
+        width: 100%;
+        min-height: 100px;
+        border: 2px dashed #94a3b8;
+        border-radius: 0.5rem;
+        padding: 0.65rem;
+        font-family: ui-monospace, monospace;
+        font-size: 0.82rem;
+        margin-top: 0.5rem;
+      }
+
+      .file-btn {
+        width: 100%;
+        margin-bottom: 0.5rem;
+        text-align: left;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        background: #f8fafc;
+        border: 1px solid #cbd5e1;
+        color: #0f172a;
+        padding: 0.75rem;
+        border-radius: 0.5rem;
+        cursor: pointer;
+        font-size: 0.9rem;
+        transition: all 0.2s;
+      }
+      .file-btn:hover {
+        background: #f1f5f9;
+        border-color: #94a3b8;
+      }
+      .file-btn i {
+        font-size: 1.1rem;
+      }
+
+      /* Fake Word Interface Styles */
+      .fake-word-ui {
+        background: #f3f4f6;
+        display: flex;
+        flex-direction: column;
+        width: 100%;
+        height: 100%;
+      }
+      .fake-word-header {
+        background: #2b579a;
+        color: white;
+        padding: 10px 15px;
+        font-family: "Segoe UI", sans-serif;
+        font-size: 0.9rem;
+        display: flex;
+        align-items: center;
+        gap: 10px;
+      }
+      .fake-word-warning {
+        background: #fff3cd;
+        color: #856404;
+        border-bottom: 1px solid #ffeeba;
+        padding: 8px 15px;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        font-family: "Segoe UI", sans-serif;
+        font-size: 0.85rem;
+      }
+      .enable-btn {
+        background: #e0e0e0;
+        border: 1px solid #ccc;
+        padding: 4px 12px;
+        cursor: pointer;
+        border-radius: 2px;
+        font-weight: 600;
+        color: #333;
+      }
+      .enable-btn:hover {
+        background: #d4d4d4;
+      }
+      .fake-page {
+        background: white;
+        margin: 20px auto;
+        width: 90%;
+        max-width: 600px;
+        min-height: 400px;
+        box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+        padding: 40px;
+        color: #9ca3af;
+        text-align: center;
+        border: 1px solid #e5e7eb;
+      }
+    </style>
+  </head>
+  <body class="site-grammarly">
+    <header class="top-bar">
+      <div class="brand">
+        <span
+          style="
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            width: 1.5rem;
+            height: 1.5rem;
+            background: #11a683;
+            color: #fff;
+            border-radius: 4px;
+            font-weight: 800;
+            font-size: 0.95rem;
+            margin-right: 0.35rem;
+          "
+          >G</span
+        >
+        Grammarly
+      </div>
+      <nav class="top-nav">
+        <a href="#">Product</a><a href="#">Business</a><a href="#">Education</a
+        ><a href="#">Pricing</a>
+      </nav>
+      <a class="hub-link" href="mpu4-fake-web.html"
+        ><i class="fas fa-arrow-left"></i> Dashboard</a
+      >
+    </header>
+
+    <main id="main-ui">
+      <div class="hero">
+        <h1>Great writing, simplified.</h1>
+        <p class="lead">
+          Hands-on labs: download safe vs. malicious templates, toggle dangerous
+          permissions, and paste to reveal clipboard tricks.
+        </p>
+      </div>
+      <div class="content-grid cols-3">
+        <div class="card">
+          <h2>Sample document</h2>
+          <p class="sub" style="margin-bottom: 1rem">
+            Choose an essay template format to download and get started.
+          </p>
+
+          <button type="button" class="file-btn" data-type="txt">
+            <span
+              ><i
+                class="far fa-file-alt"
+                style="color: #64748b; margin-right: 8px"
+              ></i>
+              essay_template.txt</span
+            >
+            <i
+              class="fas fa-download"
+              style="color: #94a3b8; font-size: 0.9rem"
+            ></i>
+          </button>
+
+          <button type="button" class="file-btn" data-type="docm">
+            <span
+              ><i
+                class="far fa-file-word"
+                style="color: #2563eb; margin-right: 8px"
+              ></i>
+              essay_template.docm</span
+            >
+            <i
+              class="fas fa-download"
+              style="color: #94a3b8; font-size: 0.9rem"
+            ></i>
+          </button>
+
+          <button type="button" class="file-btn" data-type="gdoc">
+            <span
+              ><i
+                class="fab fa-google-drive"
+                style="color: #10b981; margin-right: 8px"
+              ></i>
+              essay_template (Google Doc)</span
+            >
+            <i
+              class="fas fa-external-link-alt"
+              style="color: #94a3b8; font-size: 0.9rem"
+            ></i>
+          </button>
+        </div>
+
+        <div class="card">
+          <h2>Browser extension</h2>
+          <p class="sub">
+            Install Grammarly for your browser to get real-time writing
+            suggestions everywhere you type.
+          </p>
+          <div class="perm-row">
+            <label
+              ><input type="checkbox" id="permAll" checked /> Read and change
+              all your data on all websites</label
+            >
+          </div>
+          <div class="perm-row">
+            <label
+              ><input type="checkbox" id="permTabs" checked /> Read your
+              browsing history</label
+            >
+          </div>
+          <div class="perm-row">
+            <label
+              ><input type="checkbox" id="permClip" /> Replace text in clipboard
+              when you copy (demo flag)</label
+            >
+          </div>
+          <button
+            type="button"
+            class="btn btn-primary"
+            id="fakeExtensionBtn"
+            style="margin-top: 0.65rem"
+          >
+            Install Grammarly extension
+          </button>
+        </div>
+
+        <div class="card">
+          <h2>Grammar check</h2>
+          <p class="sub">
+            Paste any text to check for grammar, spelling, and style
+            improvements.
+          </p>
+          <textarea
+            id="sampleAnswer"
+            rows="3"
+            style="
+              width: 100%;
+              border: 1px solid var(--line);
+              border-radius: 0.5rem;
+              padding: 0.65rem;
+              font-family: inherit;
+              font-size: 0.9rem;
+            "
+          >
+The Industrial Revolution transformed society through mechanized production, urban migration, and new labor relations.</textarea
+          >
+          <button
+            type="button"
+            class="btn btn-primary"
+            id="copyAnswerBtn"
+            style="margin-top: 0.5rem"
+          >
+            <i class="far fa-copy"></i> Copy paragraph
+          </button>
+          <textarea
+            id="pasteInspector"
+            class="paste-zone"
+            placeholder="Paste here (Ctrl+V / Cmd+V) after copying…"
+          ></textarea>
+          <button
+            type="button"
+            class="btn btn-primary"
+            id="inspectPasteBtn"
+            style="margin-top: 0.5rem; background: #0f766e"
+          >
+            Run paste detector
+          </button>
+          <p
+            id="pasteHint"
+            style="font-size: 0.8rem; color: #64748b; margin-top: 0.35rem"
+          ></p>
+        </div>
+      </div>
+    </main>
+
+    <footer class="site-footer">
+      <span
+        >© Grammarly, Inc. (look-alike for training) · Not affiliated —
+        simulation only.</span
+      >
+      <div class="links">
+        <a href="#">Privacy</a><a href="#">Terms</a><a href="#">Contact</a>
+      </div>
+    </footer>
+
+    <script src="mpu4-fake-sim-common.js"></script>
+    <script>
+      (function () {
+        // --- FILE DOWNLOAD LAB LOGIC ---
+        document.querySelectorAll(".file-btn").forEach(function (btn) {
+          btn.addEventListener("click", function (e) {
+            e.preventDefault();
+            var type = this.getAttribute("data-type");
+
+            if (type === "docm") {
+              // Create fake Word interface overlay
+              var wordModal = document.createElement("div");
+              wordModal.className = "modal-overlay";
+              wordModal.style.alignItems = "stretch";
+              wordModal.style.padding = "0";
+
+              wordModal.innerHTML = `
+                <div class="fake-word-ui">
+                  <div class="fake-word-header">
+                    <i class="far fa-file-word" style="font-size:1.2rem;"></i> 
+                    <span>essay_template.docm - Protected View</span>
+                  </div>
+                  <div class="fake-word-warning">
+                    <span><i class="fas fa-shield-alt" style="margin-right:8px;"></i> <b>SECURITY WARNING</b> Macros have been disabled.</span>
+                    <button class="enable-btn" id="triggerMacroBtn">Enable Content</button>
+                  </div>
+                  <div class="fake-page">
+                    <i class="fas fa-lock" style="font-size:3rem; margin-bottom:15px; color:#d1d5db;"></i>
+                    <p>This document is protected. You must click <b>Enable Content</b> to view the essay template.</p>
+                    <button id="closeWordBtn" style="margin-top:30px; padding:8px 16px; border:1px solid #ccc; background:#fff; cursor:pointer; border-radius:4px;">Close Document Safely</button>
+                  </div>
+                </div>
+              `;
+              document.body.appendChild(wordModal);
+
+              // The Actual Trap
+              document
+                .getElementById("triggerMacroBtn")
+                .addEventListener("click", function () {
+                  wordModal.remove();
+                  if (window.Mpu4Sim)
+                    window.Mpu4Sim.logSimEvent(
+                      "You clicked 'Enable Content'. In the real world, your computer is now compromised.",
+                      "A macro is a small script built into Microsoft Office files. Attackers hide malicious code in them. When you click 'Enable Content', you give that code permission to run, download ransomware, or steal passwords.",
+                      [
+                        "Open Word trust center settings on a lab VM and screenshot macro notification options.",
+                        "Write a one-line policy: “Submissions must be PDF export only” and defend it to a partner.",
+                      ],
+                    );
+                });
+
+              // The Safe Exit from the Trap
+              document
+                .getElementById("closeWordBtn")
+                .addEventListener("click", function () {
+                  wordModal.remove();
+                  if (window.Mpu4Sim)
+                    window.Mpu4Sim.showTrainingNotice(
+                      "Good job. You closed the file without enabling the malicious content.",
+                      { title: "Trap Avoided" },
+                    );
+                });
+            } else if (type === "txt") {
+              window.Mpu4Sim.showTrainingNotice(
+                "You chose the .txt file. Plain text files cannot execute macros.",
+                {
+                  title: "Safe choice (demo)",
+                  foot: "While safe from macros, always verify the sender before opening attachments.",
+                  explanation:
+                    "Text files (.txt) do not have embedded executable code capabilities like Office documents do.",
+                  followUp: [
+                    "List 3 file extensions that are generally safe to open without fear of macros.",
+                  ],
+                },
+              );
+            } else if (type === "gdoc") {
+              window.Mpu4Sim.showTrainingNotice(
+                "You chose the Google Doc link. Viewing documents in the browser is generally safer than downloading desktop files.",
+                {
+                  title: "Safe choice (demo)",
+                  foot: "Beware of phishing links disguised as Google Docs.",
+                  explanation:
+                    "Cloud-based document viewers run in the browser sandbox, isolating your machine from traditional macro viruses.",
+                },
+              );
+            }
+          });
+        });
+
+        // --- EXTENSION LAB LOGIC ---
+        document
+          .getElementById("fakeExtensionBtn")
+          .addEventListener("click", function () {
+            var all = document.getElementById("permAll").checked;
+            if (all) {
+              window.Mpu4Sim.logSimEvent(
+                "You approved an extension with “read/change all data on all websites” — that is game-over level access.",
+                "A malicious clone could exfiltrate every cookie, form field, and MFA code typed in the browser.",
+                [
+                  "Open real Chrome Web Store → Grammarly → screenshot the verified publisher + review count.",
+                  "List two permissions you would never grant to an unknown extension.",
+                ],
+              );
+            } else {
+              window.Mpu4Sim.showTrainingNotice(
+                "Good — you tried installing with the broadest permission unchecked. In reality you should still verify publisher and reviews.",
+                {
+                  title: "Safer choice (demo)",
+                  foot: "Malware can still hide in narrower permissions; this is only one layer.",
+                  explanation:
+                    "Least privilege reduces blast radius but does not replace source verification.",
+                  followUp: [
+                    "Toggle “clipboard replace” on and retry—predict what malware could do before you click Install again.",
+                  ],
+                },
+              );
+            }
+          });
+
+        // --- CLIPBOARD LAB LOGIC ---
+        var lastClip = "";
+        document
+          .getElementById("copyAnswerBtn")
+          .addEventListener("click", async function () {
+            var malicious = "\n\n[See also: malicious-link.example/research]";
+            var base = document.getElementById("sampleAnswer").value;
+            lastClip = base + malicious;
+            try {
+              await navigator.clipboard.writeText(lastClip);
+              document.getElementById("pasteHint").textContent =
+                "Copied (with hidden tail). Now paste into the dashed box.";
+              document.getElementById("pasteHint").style.color = "#047857";
+            } catch (err) {
+              document.getElementById("pasteHint").textContent =
+                "Clipboard blocked — paste manually from the gray box after selecting all.";
+              document.getElementById("pasteHint").style.color = "#b45309";
+              lastClip = "";
+            }
+          });
+
+        document
+          .getElementById("inspectPasteBtn")
+          .addEventListener("click", function () {
+            var txt = document.getElementById("pasteInspector").value;
+            if (!txt.trim()) {
+              document.getElementById("pasteHint").textContent =
+                "Paste something first, then run the detector.";
+              document.getElementById("pasteHint").style.color = "#b45309";
+              return;
+            }
+            if (txt.indexOf("malicious-link.example") >= 0) {
+              window.Mpu4Sim.logSimEvent(
+                "Detector found an injected line in your pasted text — clipboard hijack confirmed in this demo.",
+                "Victims spread poisoned links or wallet addresses when they paste into email, Slack, or essays without looking.",
+                [
+                  "Re-copy and paste into a one-line scratch buffer habit—time yourself doing it 3 times.",
+                ],
+              );
+            } else {
+              window.Mpu4Sim.showTrainingNotice(
+                "No malicious tail detected in your paste. Either you typed manually, or the browser blocked the poisoned copy.",
+                {
+                  title: "Paste check (demo)",
+                  foot: "Try again: use Copy paragraph, then paste immediately without editing.",
+                  explanation:
+                    "Some browsers strip extra clipboard data; others do not—environment matters.",
+                  followUp: [
+                    "Paste the same content into two apps (Notepad vs browser) and compare results.",
+                  ],
+                },
+              );
+            }
+          });
+      })();
+    </script>
+  </body>
+</html>

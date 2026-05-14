@@ -1,0 +1,511 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Codashop — Game top-up</title>
+    <link
+      href="https://fonts.googleapis.com/css2?family=DM+Sans:ital,opsz,wght@0,9..40,400;0,9..40,500;0,9..40,600;0,9..40,700&family=Outfit:wght@500;600;700&display=swap"
+      rel="stylesheet"
+    />
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css"
+    />
+    <link rel="stylesheet" href="mpu4-fake-sim-common.css" />
+    <style>
+      body.site-codashop {
+        --btn: #ff6a00;
+        background: linear-gradient(
+          180deg,
+          #12100e 0%,
+          #1c1814 50%,
+          #151210 100%
+        );
+        color: #f5f0eb;
+      }
+      body.site-codashop .top-bar {
+        background: rgba(18, 16, 14, 0.95);
+        border-color: rgba(255, 106, 0, 0.35);
+        backdrop-filter: blur(8px);
+      }
+      body.site-codashop nav.top-nav a {
+        color: #a8a29e;
+      }
+      body.site-codashop nav.top-nav a:hover {
+        color: #fdba74;
+      }
+      body.site-codashop .hub-link {
+        background: rgba(255, 106, 0, 0.12);
+        border-color: rgba(255, 106, 0, 0.45);
+        color: #fed7aa;
+      }
+      body.site-codashop main {
+        max-width: 960px;
+      }
+      body.site-codashop .hero h1 {
+        font-family: "Outfit", sans-serif;
+        color: #fff;
+      }
+      body.site-codashop .hero p.lead {
+        color: #a8a29e;
+      }
+      body.site-codashop .card {
+        background: rgba(35, 31, 28, 0.96);
+        border-color: rgba(255, 106, 0, 0.22);
+        color: #f5f0eb;
+      }
+      body.site-codashop .card p.sub {
+        color: #a8a29e;
+      }
+      body.site-codashop .site-footer {
+        background: #0c0a09;
+        border-color: rgba(255, 106, 0, 0.2);
+        color: #78716c;
+      }
+      .prog-wrap {
+        height: 12px;
+        background: #292524;
+        border-radius: 999px;
+        overflow: hidden;
+        margin: 0.75rem 0;
+        border: 1px solid #44403c;
+      }
+      .prog-fill {
+        height: 100%;
+        width: 0%;
+        background: linear-gradient(90deg, #ea580c, #ff6a00);
+        transition: width 0.12s linear;
+      }
+
+      /* Popup Specific Styles */
+      .popup-overlay {
+        position: fixed;
+        top: 0;
+        left: 0;
+        right: 0;
+        bottom: 0;
+        background: rgba(0, 0, 0, 0.8);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        z-index: 9999;
+        opacity: 0;
+        visibility: hidden;
+        transition: opacity 0.3s ease;
+      }
+      .popup-overlay.show {
+        opacity: 1;
+        visibility: visible;
+      }
+      .ad-box-coda {
+        background: linear-gradient(135deg, #292524, #1c1917);
+        border: 2px solid #ff6a00;
+        border-radius: 0.75rem;
+        padding: 2rem;
+        width: 90%;
+        max-width: 450px;
+        box-shadow: 0 10px 25px rgba(0, 0, 0, 0.5);
+        text-align: center;
+      }
+      .ad-actions {
+        display: flex;
+        flex-direction: column;
+        gap: 0.5rem;
+        margin-top: 1.5rem;
+        align-items: center;
+      }
+      .btn-trap {
+        background: #ef4444;
+        color: #fff;
+        border: none;
+        width: 40px;
+        height: 40px;
+        border-radius: 50%;
+        cursor: pointer;
+        font-size: 1.5rem;
+        line-height: 1;
+        position: absolute;
+        top: -15px;
+        right: -15px;
+        box-shadow: 0 4px 6px rgba(0, 0, 0, 0.3);
+      }
+      .btn-safe {
+        background: transparent;
+        border: 1px solid #a8a29e;
+        color: #e7e5e4;
+        padding: 0.75rem 1.5rem;
+        border-radius: 0.5rem;
+        cursor: pointer;
+        font-size: 0.9rem;
+        width: 100%;
+      }
+      .btn-safe:hover {
+        background: #292524;
+      }
+      .steam-step {
+        display: none;
+      }
+      .steam-step.active {
+        display: block;
+      }
+    </style>
+  </head>
+  <body class="site-codashop">
+    <header class="top-bar">
+      <div class="brand">
+        <i class="fas fa-mobile-screen" style="color: #ff6a00"></i> Codashop
+      </div>
+      <nav class="top-nav">
+        <a href="#">Games</a><a href="#">Direct Top Up</a
+        ><a href="#">Gift cards</a><a href="#">Support</a>
+      </nav>
+      <a class="hub-link" href="mpu4-fake-web.html"
+        ><i class="fas fa-arrow-left"></i> Dashboard</a
+      >
+    </header>
+
+    <main>
+      <div class="hero">
+        <h1>Top up diamonds &amp; UC in seconds.</h1>
+        <p class="lead">
+          Look-alike voucher flow for class: you must
+          <strong>interact</strong> with each trap.
+        </p>
+      </div>
+      <div class="content-grid">
+        <div class="card" id="voucherCard">
+          <h2>
+            <i class="fas fa-bolt" style="color: #ff6a00"></i> Live voucher sync
+          </h2>
+          <p class="sub">
+            Syncing your account with the latest voucher offers and rewards.
+          </p>
+          <div id="voucherPanel" style="display: none">
+            <p
+              style="font-size: 0.85rem; color: #fdba74; margin-bottom: 0.35rem"
+            >
+              Injecting voucher helper… <span id="vPct">0</span>%
+            </p>
+            <div class="prog-wrap">
+              <div class="prog-fill" id="vProgFill"></div>
+            </div>
+            <button
+              type="button"
+              class="btn btn-primary"
+              id="abortVoucherBtn"
+              style="background: #16a34a"
+            >
+              Stop suspicious sync
+            </button>
+          </div>
+          <button type="button" class="btn btn-primary" id="startVoucherBtn">
+            Start this challenge
+          </button>
+          <p
+            id="voucherDoneHint"
+            style="
+              display: none;
+              font-size: 0.8rem;
+              color: #78716c;
+              margin-top: 0.5rem;
+            "
+          >
+            Reload the page to retry the challenge.
+          </p>
+        </div>
+
+        <div class="card">
+          <h2>
+            <i class="fab fa-steam" style="color: #66c0f4"></i> Link Steam
+            account
+          </h2>
+          <p class="sub">
+            Connect your Steam account to earn bonus rewards on every purchase.
+          </p>
+          <button type="button" class="btn btn-primary" id="steamStartBtn">
+            <i class="fab fa-steam"></i> Start Steam link wizard
+          </button>
+        </div>
+      </div>
+    </main>
+
+    <div id="ucPopup" class="popup-overlay">
+      <div class="ad-box-coda" style="position: relative">
+        <button
+          type="button"
+          class="btn-trap"
+          id="trapCloseX"
+          aria-label="Close"
+        >
+          ×
+        </button>
+
+        <h2>
+          <i class="fas fa-gift" style="color: #fbbf24; font-size: 2rem"></i>
+        </h2>
+        <h3 style="margin: 10px 0">Flash UC Bundle</h3>
+        <strong style="color: #fef3c7; font-size: 1.2rem"
+          >+810 UC — FREE ADD-ON</strong
+        >
+        <p style="margin-top: 0.45rem; font-size: 0.9rem; color: #d6d3d1">
+          Limited to first 500 checkouts today. Do not close this window or you
+          will lose your reward.
+        </p>
+
+        <div class="ad-actions">
+          <button
+            type="button"
+            class="btn btn-primary"
+            style="
+              width: 100%;
+              background: #ff6a00;
+              border: none;
+              padding: 10px;
+            "
+          >
+            Claim Now
+          </button>
+          <span style="font-size: 0.75rem; color: #a8a29e; margin-top: 10px"
+            >Safe dismiss control:</span
+          >
+          <button type="button" class="btn-safe" id="safeCloseBtn">
+            No thanks — close offer
+          </button>
+        </div>
+      </div>
+    </div>
+
+    <footer class="site-footer">
+      <span
+        >© Codashop (look-alike for training) · Not affiliated — simulation
+        only.</span
+      >
+      <div class="links">
+        <a href="#">Privacy</a><a href="#">Terms</a><a href="#">Help</a>
+      </div>
+    </footer>
+
+    <script src="mpu4-fake-sim-common.js"></script>
+    <script>
+      (function () {
+        // --- VOUCHER SYNC LOGIC ---
+        var voucherIv = null;
+        var voucherPct = 0;
+        var voucherOutcomeDone = false;
+
+        document
+          .getElementById("startVoucherBtn")
+          .addEventListener("click", function () {
+            var btn = this;
+            btn.style.display = "none";
+            document.getElementById("voucherPanel").style.display = "block";
+            voucherPct = 0;
+            voucherIv = setInterval(function () {
+              voucherPct += 4;
+              if (voucherPct > 100) voucherPct = 100;
+              document.getElementById("vProgFill").style.width =
+                voucherPct + "%";
+              document.getElementById("vPct").textContent = String(voucherPct);
+              if (voucherPct >= 100) {
+                clearInterval(voucherIv);
+                voucherIv = null;
+                voucherOutcomeDone = true;
+                document.getElementById("voucherDoneHint").style.display =
+                  "block";
+                if (window.Mpu4Sim)
+                  window.Mpu4Sim.logSimEvent(
+                    "You let the fake “voucher sync” finish: a real page could have dropped an .exe or script without another click.",
+                    "Drive-by and “silent installers” abuse trust in gaming brands and urgency bars.",
+                    [
+                      "Re-run the challenge and stop the bar before 70%.",
+                      "List two settings that block silent downloads.",
+                    ],
+                  );
+              }
+            }, 320);
+          });
+
+        document
+          .getElementById("abortVoucherBtn")
+          .addEventListener("click", function () {
+            if (voucherOutcomeDone) return;
+            if (voucherIv) {
+              clearInterval(voucherIv);
+              voucherIv = null;
+            }
+            voucherOutcomeDone = true;
+            document.getElementById("voucherPanel").style.display = "none";
+            document.getElementById("voucherDoneHint").style.display = "block";
+            if (window.Mpu4Sim)
+              window.Mpu4Sim.logSimEvent(
+                "You stopped the fake sync at " +
+                  voucherPct +
+                  "% — good reflex.",
+                "Defense in depth matters: user action + browser sandbox + AV.",
+                [
+                  "Debate: Is stopping halfway always safe?",
+                  "Find where your browser lists recent downloads.",
+                ],
+              );
+          });
+
+        // --- UC POPUP LOGIC ---
+        setTimeout(() => {
+          document.getElementById("ucPopup").classList.add("show");
+        }, 1500);
+
+        document
+          .getElementById("trapCloseX")
+          .addEventListener("click", function () {
+            document.getElementById("ucPopup").classList.remove("show");
+            if (window.Mpu4Sim)
+              window.Mpu4Sim.logSimEvent(
+                "You pressed the tiny red “X” — classic malvertising trap.",
+                "Attackers mimic native UI; it often launches a download instead of closing.",
+                [
+                  "Take a screenshot and circle both close controls.",
+                  "List sites where you never click ad close buttons.",
+                ],
+              );
+          });
+
+        document
+          .getElementById("safeCloseBtn")
+          .addEventListener("click", function () {
+            document.getElementById("ucPopup").classList.remove("show");
+            if (window.Mpu4Sim)
+              window.Mpu4Sim.showTrainingNotice(
+                "Nice — you chose the labeled “No thanks” control.",
+                {
+                  title: "Good habit (demo)",
+                  foot: "In real malvertising both can be evil; prefer leaving the tab.",
+                  explanation:
+                    "Legitimate promos rarely hide the only dismiss path in a tiny floating icon.",
+                  followUp: ["Enable an ad-blocker for your lab VM."],
+                },
+              );
+          });
+
+        // --- STEAM WIZARD LOGIC ---
+        document
+          .getElementById("steamStartBtn")
+          .addEventListener("click", function () {
+            var overlay = document.createElement("div");
+            overlay.className = "modal-overlay popup-overlay show"; // Reusing popup styling for consistency
+
+            overlay.innerHTML = `
+            <div class="modal-box dark" style="max-width:420px; background:#171a21; border:1px solid #333; padding:20px; border-radius:4px; color:#f3f3f3; position:relative;">
+                <p style="font-size:0.75rem;color:#94a3b8;margin-bottom:0.5rem;">Step <span id="stStepNum">1</span> of 3</p>
+                
+                <div id="st1" class="steam-step active">
+                    <h3 style="margin-bottom:0.5rem;font-size:1rem;">Verify device</h3>
+                    <p style="font-size:0.85rem;color:#94a3b8;margin-bottom:0.75rem;">Click the icon that matches the real Steam client mark.</p>
+                    <div style="display:flex;gap:1rem;flex-wrap:wrap;justify-content:center;padding:10px 0;">
+                        <button type="button" class="st-wrong" style="background:none; border:none; color:#107c10; font-size:2rem; cursor:pointer;"><i class="fab fa-xbox"></i></button>
+                        <button type="button" id="stCorrect" style="background:none; border:none; color:#66c0f4; font-size:2rem; cursor:pointer;"><i class="fab fa-steam"></i></button>
+                        <button type="button" class="st-wrong" style="background:none; border:none; color:#003087; font-size:2rem; cursor:pointer;"><i class="fab fa-playstation"></i></button>
+                    </div>
+                </div>
+
+                <div id="st2" class="steam-step">
+                    <h3 style="margin-bottom:0.5rem;font-size:1rem;">Confirm domain</h3>
+                    <label style="font-size:0.85rem;display:flex;gap:0.5rem;align-items:flex-start;cursor:pointer;">
+                        <input type="checkbox" id="stDomainChk" style="margin-top:0.2rem;">
+                        <span>I checked the address bar and this popup is on <strong>store.steampowered.com</strong>.</span>
+                    </label>
+                    <button type="button" id="stNext2" style="background:#1b2838; color:#66c0f4; border:none; margin-top:1rem; width:100%; padding:10px; opacity:0.5;" disabled>Continue</button>
+                </div>
+
+                <div id="st3" class="steam-step">
+                    <h3 style="margin-bottom:0.5rem;font-size:1rem;"><i class="fab fa-steam" style="color:#66c0f4;"></i> Sign in</h3>
+                    <input type="text" id="steamUser" placeholder="Account name" style="width:100%; margin-bottom:10px; background:#32353c; border:1px solid #000; color:#fff; padding:8px; box-sizing: border-box;">
+                    <input type="password" id="steamPass" placeholder="Password" style="width:100%; background:#32353c; border:1px solid #000; color:#fff; padding:8px; box-sizing: border-box;">
+                    <div style="margin-top:0.75rem;display:flex;gap:0.5rem;">
+                        <button type="button" id="submitSteamFake" style="background:#1b2838; color:#66c0f4; border:none; padding:8px 20px; cursor:pointer;">Sign in</button>
+                        <button type="button" id="closeSteamModal" style="background:transparent; color:#94a3b8; border:none; cursor:pointer;">Cancel</button>
+                    </div>
+                </div>
+                <p style="font-size:0.72rem;color:#64748b;margin-top:0.75rem;border-top:1px solid #333;padding-top:10px;">Training only — never enter a real password.</p>
+            </div>`;
+
+            document.body.appendChild(overlay);
+
+            // Step Navigation Function
+            function goStep(n) {
+              ["st1", "st2", "st3"].forEach(function (id, i) {
+                overlay
+                  .querySelector("#" + id)
+                  .classList.toggle("active", i + 1 === n);
+              });
+              overlay.querySelector("#stStepNum").textContent = String(n);
+            }
+
+            // Step 1 to 2
+            overlay
+              .querySelector("#stCorrect")
+              .addEventListener("click", function () {
+                goStep(2);
+              });
+
+            // Wrong answers in Step 1
+            overlay.querySelectorAll(".st-wrong").forEach(function (btn) {
+              btn.addEventListener("click", function () {
+                overlay.remove();
+                if (window.Mpu4Sim)
+                  window.Mpu4Sim.logSimEvent(
+                    "Wrong icon — attackers still harvest clicks to fingerprint you or open pop-unders.",
+                    "Even “wrong” choices can fire tracking pixels; the safest move is closing the tab.",
+                    [
+                      "Open the official Steam desktop app and sketch its logo.",
+                    ],
+                  );
+              });
+            });
+
+            // Step 2 Validation
+            overlay
+              .querySelector("#stDomainChk")
+              .addEventListener("change", function () {
+                const nextBtn = overlay.querySelector("#stNext2");
+                nextBtn.disabled = !this.checked;
+                nextBtn.style.opacity = this.checked ? "1" : "0.5";
+                nextBtn.style.cursor = this.checked ? "pointer" : "default";
+              });
+
+            // Step 2 to 3
+            overlay
+              .querySelector("#stNext2")
+              .addEventListener("click", function () {
+                goStep(3);
+              });
+
+            // Step 3 Submit
+            overlay
+              .querySelector("#submitSteamFake")
+              .addEventListener("click", function () {
+                var u = overlay.querySelector("#steamUser").value || "user";
+                overlay.remove();
+                if (window.Mpu4Sim)
+                  window.Mpu4Sim.logSimEvent(
+                    "Simulated Steam phishing: credentials for “" +
+                      u +
+                      "” would be stolen.",
+                    "Multi-step flows build compliance psychology.",
+                    [
+                      "Side-by-side: open the real Steam login and list UI differences.",
+                    ],
+                  );
+              });
+
+            // Cancel Modal
+            overlay
+              .querySelector("#closeSteamModal")
+              .addEventListener("click", function () {
+                overlay.remove();
+              });
+          });
+      })();
+    </script>
+  </body>
+</html>
