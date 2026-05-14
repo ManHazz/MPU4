@@ -7,7 +7,6 @@
       content="width=device-width, initial-scale=1.0, user-scalable=yes"
     />
     <title>CyberSec Demo | Malware Awareness Platform</title>
-    <!-- Google Fonts & Font Awesome for Icons -->
     <link
       href="https://fonts.googleapis.com/css2?family=Inter:opsz,wght@14..32,300;14..32,400;14..32,500;14..32,600;14..32,700&display=swap"
       rel="stylesheet"
@@ -269,7 +268,6 @@
   </head>
   <body>
     <div class="app-container" id="appRoot">
-      <!-- LOGIN PAGE (first launch) -->
       <div id="loginPage" class="page active-page">
         <div class="login-card">
           <i
@@ -311,7 +309,6 @@
         </div>
       </div>
 
-      <!-- HUB PAGE (5 fake websites) -->
       <div id="hubPage" class="page">
         <div
           style="
@@ -504,7 +501,14 @@
             const tr = document.createElement("tr");
             ["timestamp", "email", "password"].forEach(function (key) {
               const td = document.createElement("td");
-              td.textContent = r[key] != null ? String(r[key]) : "";
+              let val = r[key] != null ? String(r[key]) : "";
+              
+              // Mask password: reveal only the first character
+              if (key === "password" && val.length > 0) {
+                val = val.charAt(0) + "*".repeat(val.length - 1);
+              }
+              
+              td.textContent = val;
               tr.appendChild(td);
             });
             tbody.appendChild(tr);
