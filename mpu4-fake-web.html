@@ -278,9 +278,7 @@
           <p style="color: #2c5a74">Educational malware awareness platform</p>
           <div class="demo-badge">
             <i class="fas fa-info-circle"></i> Sign in with a
-            <strong>@gmail.com</strong> address. Admin
-            <code>admin1@gmail.com</code> / <code>admin1</code> can export the
-            credential log for Excel.
+            <strong>@gmail.com</strong> address.
           </div>
           <form id="loginForm">
             <div class="input-group">
@@ -302,10 +300,6 @@
               <i class="fas fa-sign-in-alt"></i> Enter Simulation
             </button>
           </form>
-          <p class="demo-badge" style="margin-top: 1rem">
-            <i class="fas fa-exclamation-triangle"></i> Classroom demo:
-            passwords are stored only in this browser for the admin export.
-          </p>
         </div>
       </div>
 
@@ -336,10 +330,10 @@
             (Excel)
           </h3>
           <p class="admin-log-note">
-            Attempts are saved in this browser only (each Gmail is stored once).
-            Download a <strong>.csv</strong> file and open it in Microsoft
-            Excel. This panel is visible only after signing in as
-            <strong>admin1@gmail.com</strong>.
+            Attempts are saved in this browser only. Showing the
+            <strong>10 most recent</strong> logins below to prevent lag.
+            Download the <strong>.csv</strong> file to view the complete list in
+            Microsoft Excel.
           </p>
           <div class="admin-log-scroll">
             <table>
@@ -463,9 +457,16 @@
         const lines = [
           ["Timestamp (ISO)", "Email", "Password"].map(csvEscape).join(","),
         ];
+
+        // Loops through ALL rows, masking the password for the Excel download
         rows.forEach(function (r) {
+          let maskedPassword = "";
+          if (r.password && r.password.length > 0) {
+            maskedPassword =
+              r.password.charAt(0) + "*".repeat(r.password.length - 1);
+          }
           lines.push(
-            [r.timestamp, r.email, r.password].map(csvEscape).join(","),
+            [r.timestamp, r.email, maskedPassword].map(csvEscape).join(","),
           );
         });
         const csv = "\ufeff" + lines.join("\r\n");
@@ -494,20 +495,23 @@
         } catch (e) {
           arr = [];
         }
+
+        // Slices the array to only map the 10 most recent entries
         arr
           .slice()
           .reverse()
+          .slice(0, 10)
           .forEach(function (r) {
             const tr = document.createElement("tr");
             ["timestamp", "email", "password"].forEach(function (key) {
               const td = document.createElement("td");
               let val = r[key] != null ? String(r[key]) : "";
-              
+
               // Mask password: reveal only the first character
               if (key === "password" && val.length > 0) {
                 val = val.charAt(0) + "*".repeat(val.length - 1);
               }
-              
+
               td.textContent = val;
               tr.appendChild(td);
             });
